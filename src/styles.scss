@@ -1,0 +1,388 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+
+// Container
+#workflow-makr-chart-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #efefef;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+// Org chart
+$blue-dk: #002A50;
+$blue: #22659c;
+
+@mixin shadow($level: 1) {
+    @if $level==1 {
+        box-shadow: 0 1px 3px rgba(black, 0.12), 0 1px 2px rgba(black, 0.24);
+    }
+
+    @else if $level==2 {
+        box-shadow: 0 3px 6px rgba(black, 0.16), 0 3px 6px rgba(black, 0.23);
+    }
+
+    @else if $level==3 {
+        box-shadow: 0 10px 20px rgba(black, 0.19), 0 6px 6px rgba(black, 0.23);
+    }
+
+    @else if $level==4 {
+        box-shadow: 0 14px 28px rgba(black, 0.25), 0 10px 10px rgba(black, 0.22);
+    }
+
+    @else if $level==5 {
+        box-shadow: 0 19px 38px rgba(black, 0.30), 0 15px 12px rgba(black, 0.22);
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #22659c;
+}
+
+.workflow-makr-org {
+    display: flex;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+
+    ul {
+        padding-top: 20px;
+        position: relative;
+        transition: all 0.5s;
+
+        ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 1px solid #ccc;
+            width: 50%;
+            height: 20px;
+        }
+    }
+
+    li {
+        float: left;
+        text-align: center;
+        list-style-type: none;
+        position: relative;
+        padding: 20px 10px;
+        transition: all 0.5s;
+
+        &.end {
+            float: none;
+            margin: 0 auto;
+        }
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 1px solid #ccc;
+            width: 50%;
+            height: 19px;
+        }
+
+        &::after {
+            right: auto;
+            left: 50%;
+            border-left: 1px solid #ccc;
+        }
+
+        &:only-child::after,
+        &:only-child::before {
+            border-radius: 0 !important;
+            right: calc(50% - 1px);
+        }
+
+        &:first-child::before,
+        &:last-child::after {
+            border: 0 none;
+        }
+
+        &:last-child::before {
+            border-right: 1px solid #ccc;
+            border-radius: 0 6px 0 0;
+        }
+
+        &:first-child::after {
+            border-radius: 6px 0 0 0;
+        }
+
+        .node {
+            text-decoration: none;
+            color: #666;
+            display: inline-block;
+            padding: 20px 10px;
+            transition: all 0.5s;
+            background: #fff;
+            min-width: 180px;
+            border-radius: 6px;
+            @include shadow(1);
+
+            &.start,
+            &.end {
+                width: 50px;
+                min-width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                padding: 0;
+                background: #cecece;
+                line-height: 50px;
+                font-size: 10px;
+                font-weight: 900;
+                letter-spacing: 1px;
+                color: #333;
+            }
+
+            &.end {
+                background: $blue;
+                color: #fff;
+            }
+
+            &:not(.start):not(.end) {
+
+                &:hover,
+                &:hover+ul li .node:not(.end) {
+                    background: lighten($blue, 45%);
+                    color: $blue-dk;
+                    transition: all 0.15s;
+                    box-shadow: inset 0 0 0 3px lighten($blue, 30%), 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+                }
+
+                &:hover {
+
+                    +ul li::after,
+                    +ul li::before,
+                    +ul::before,
+                    +ul ul::before {
+                        border-color: #94a0b4;
+                    }
+                }
+            }
+
+            >div,
+            >a {
+                font-size: 12px;
+            }
+
+            .status {
+                font-size: 18px;
+                float: none;
+                margin: 0 auto;
+            }
+
+            .action {
+                font-weight: 700;
+                font-size: 13px;
+                color: $blue;
+                text-transform: uppercase;
+                position: absolute;
+                top: 5px;
+                font-size: 10px;
+                right: calc(50% - 45px);
+                width: 100%;
+                text-align: center;
+                background: #efefef;
+                padding: 0;
+                z-index: 2;
+            }
+
+            .status,
+            .action {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 15ch;
+            }
+        }
+    }
+
+    &>ul>li:before {
+        border: 0 none !important;
+    }
+}
+
+// Page loading
+#loading-workflow-makr {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    min-width: 1200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: $blue;
+    transition: opacity 0.45s ease-in-out;
+    z-index: 999;
+
+    .loader {
+        height: 32px;
+        width: 32px;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    .loader span {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        height: 32px;
+        width: 32px;
+    }
+
+    .loader span::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        height: 32px;
+        width: 32px;
+        border: 3px solid #FFF;
+        border-bottom: 3px solid transparent;
+        border-radius: 50%;
+        -webkit-animation: loader-1 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        animation: loader-1 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+    }
+
+    .loader span::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 5px;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        width: 6px;
+        height: 6px;
+        background: #FFF;
+        border-radius: 50%;
+        -webkit-animation: loader-2 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        animation: loader-2 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+    }
+}
+
+@-webkit-keyframes loader-1 {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    40% {
+        -webkit-transform: rotate(180deg);
+    }
+
+    60% {
+        -webkit-transform: rotate(180deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes loader-1 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    40% {
+        transform: rotate(180deg);
+    }
+
+    60% {
+        transform: rotate(180deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes loader-2 {
+    0% {
+        -webkit-transform: translate3d(0, -32px, 0) scale(0, 2);
+        opacity: 0;
+    }
+
+    50% {
+        -webkit-transform: translate3d(0, 0, 0) scale(1.25, 1.25);
+        opacity: 1;
+    }
+
+    100% {
+        -webkit-transform: translate3d(0, 8px, 0) scale(0, 0);
+        opacity: 0;
+    }
+}
+
+@keyframes loader-2 {
+    0% {
+        transform: translate3d(0, -32px, 0) scale(0, 2);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translate3d(0, 0, 0) scale(1.25, 1.25);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(0, 8px, 0) scale(0, 0);
+        opacity: 0;
+    }
+}
+
+// Animations
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(0, -40px, 0)
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes fadeInUp {
+    from {
+        transform: translate3d(0, -40px, 0)
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1
+    }
+}

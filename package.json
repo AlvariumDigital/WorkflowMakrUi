@@ -1,0 +1,30 @@
+{
+  "name": "workflow-makr-ui",
+  "version": "1.0.0",
+  "description": "The UI integration of WorkflowMakr package, see https://github.com/AlvariumDigital/WorkflowMakr for details.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "rollup -c --watch",
+    "build": "rollup -c"
+  },
+  "keywords": [
+    "workflow",
+    "maker",
+    "workflow",
+    "makr",
+    "ui"
+  ],
+  "type": "module",
+  "author": "Alvarium Digital",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "node-sass": "^5.0.0",
+    "rollup": "^2.35.1",
+    "rollup-plugin-styles": "^3.11.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "dependencies": {}
+}
