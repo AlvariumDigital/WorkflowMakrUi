@@ -7,8 +7,6 @@ import {
     loader,
     addIcon,
     deleteIcon,
-    deleteDialog,
-    parseHtml,
     editIcon
 } from './templates'
 
@@ -92,6 +90,9 @@ function attachEventListeners() {
         if (target.getAttribute('data-cancel-delete-transition')) {
             cancelDeleteTransition(target)
         }
+        if (target.getAttribute('data-delete-transition')) {
+            confirmDeleteTransition(target)
+        }
     })
 }
 
@@ -167,7 +168,9 @@ function reCalculateContainerWidth() {
 function deleteEventListener(element) {
     const transitionId = +element.getAttribute("data-transition-id")
     const transition = findTransition(s.transitions, transitionId)
-    document.querySelector('.node.to-delete')?.classList.remove('to-delete')
+    const elements = document.querySelector('.node.to-delete')
+    if (elements)
+        elements.classList.remove('to-delete')
     document.querySelector('.node[data-transition="' + transitionId + '"]').classList.add('to-delete')
 }
 
@@ -177,6 +180,14 @@ function deleteEventListener(element) {
  */
 function cancelDeleteTransition(element) {
     document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-delete-transition') + '"]').classList.remove('to-delete')
+}
+
+/**
+ * Event listener for the event "click" on confirm delete a transition
+ * @param element The element clicked
+ */
+function confirmDeleteTransition(element) {
+    document.querySelector('.node[data-transition="' + element.getAttribute('data-delete-transition') + '"]').classList.add('deleting')
 }
 
 /**
@@ -221,6 +232,7 @@ function showNode(transition) {
             <a data-cancel-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.cancelBtn + '</a>\
             </div>\
         </div>'
+    node += '<div class="loader"><span></span></div>'
     node += '</div>'
     if (transition.transitions && transition.transitions.length) {
         node += '<ul>'

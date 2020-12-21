@@ -197,6 +197,34 @@ body {
                         right: calc(50% - 2px);
                     }
                 }
+
+                .loader {
+                    display: none;
+                }
+
+                &.deleting,
+                &.deleting+ul li .node:not(.end) {
+                    position: relative;
+
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        left: 0;
+                        bottom: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba($blue-dk, .8);
+                        z-index: 3;
+                        border-radius: 6px;
+                    }
+
+                    .loader {
+                        display: block;
+                        z-index: 4;
+                    }
+                }
             }
 
             &:hover {
@@ -365,10 +393,20 @@ body {
     background-color: $blue;
     transition: opacity 0.45s ease-in-out;
     z-index: 999;
+}
 
-    .loader {
-        height: 32px;
-        width: 32px;
+.loader {
+    height: 32px;
+    width: 32px;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+
+    span {
         display: block;
         position: absolute;
         top: 0;
@@ -376,21 +414,11 @@ body {
         bottom: 0;
         right: 0;
         margin: auto;
-    }
-
-    .loader span {
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        margin: auto;
         height: 32px;
         width: 32px;
     }
 
-    .loader span::before {
+    span::before {
         content: "";
         display: block;
         position: absolute;
@@ -408,7 +436,7 @@ body {
         animation: loader-1 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
     }
 
-    .loader span::after {
+    span::after {
         content: "";
         position: absolute;
         top: 0;
@@ -515,237 +543,5 @@ body {
     to {
         transform: translate3d(0, 0, 0);
         opacity: 1
-    }
-}
-
-// Dialog
-.overlay {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    visibility: hidden;
-    opacity: 0;
-    z-index: 3;
-    font-family: 'Lato', sans-serif;
-
-    &.show {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    &#delete-transition-dialog {
-        .popup {
-            width: 500px;
-
-            .content {
-                p {
-                    padding: 20px 0 0 0;
-                    margin: 0;
-                    color: $red;
-                    text-align: center;
-                }
-            }
-        }
-    }
-
-    .popup {
-        margin: 70px auto;
-        background: #fff;
-        border-radius: 5px;
-        min-width: 30%;
-        max-width: 90%;
-        position: relative;
-
-        .close-dialog {
-            transition: color 200ms;
-            font-size: 30px;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .close-dialog:hover {
-            color: $blue;
-            cursor: pointer;
-        }
-
-        .content {
-            max-height: calc(90% - 60px - 60px);
-            overflow: auto;
-            padding: 20px;
-            font-size: 16px;
-
-            .transition-meta {
-                display: grid;
-                font-size: 18px;
-                grid-gap: 3px;
-                grid-template-columns: repeat(3, 1fr) 1em;
-                margin-left: auto;
-                margin-right: auto;
-                margin-top: 10px;
-                width: 100%;
-
-                &>span {
-                    background-color: $blue;
-                    color: #ffffff;
-                    font-weight: 700;
-                    letter-spacing: 0.01em;
-                    line-height: 1.333em;
-                    padding: 0.667em 0.667em 0.667em 1.333em;
-                    position: relative;
-                    text-decoration: none;
-                    text-align: center;
-                    position: relative;
-
-                    &>span {
-                        position: absolute;
-                        top: -18px;
-                        left: 0;
-                        font-size: .6rem;
-                        color: $blue-dk;
-                        font-weight: 800;
-                    }
-
-                    .text {
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 10ch;
-                    }
-
-                    &:nth-child(1) {
-                        background-color: lighten($blue, 45%);
-                        z-index: 3;
-                    }
-
-                    &:nth-child(2) {
-                        background-color: lighten($blue, 35%);
-                        z-index: 2;
-                    }
-
-                    &:nth-child(3) {
-                        background-color: lighten($blue, 25%);
-                        z-index: 1;
-                    }
-
-                    & {
-                        &:before {
-                            border-bottom: 1.333em solid transparent;
-                            border-left: 0.667em solid #ffffff;
-                            border-top: 1.333em solid transparent;
-                            bottom: 0;
-                            content: '';
-                            height: 0;
-                            left: 0;
-                            position: absolute;
-                            top: 0;
-                            width: 0;
-                        }
-
-                        &:after {
-                            border-bottom: 1.333em solid transparent;
-                            border-left: 0.667em solid;
-                            border-top: 1.333em solid transparent;
-                            bottom: 0;
-                            content: '';
-                            height: 0;
-                            position: absolute;
-                            right: 0;
-                            top: 0;
-                            transform: translateX(0.667em);
-                            width: 0;
-                        }
-
-                        &:nth-child(1) {
-                            &:after {
-                                border-left-color: lighten($blue, 45%);
-                            }
-                        }
-
-                        &:nth-child(2) {
-                            &:after {
-                                border-left-color: lighten($blue, 35%);
-                            }
-                        }
-
-                        &:nth-child(3) {
-                            &:after {
-                                border-left-color: lighten($blue, 25%);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        .header,
-        .footer {
-            height: 60px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-
-        .header,
-        .footer {
-            padding: 0 20px;
-        }
-
-        .header {
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(0, 0, 0, .1);
-
-            h2 {
-                font-size: 18px;
-            }
-        }
-
-        .footer {
-            justify-content: flex-end;
-            border-top: 1px solid rgba(0, 0, 0, .1);
-            background-color: rgba(0, 0, 0, .05);
-
-            .close-dialog {
-                font-size: 14px;
-                font-weight: normal;
-                text-decoration: none;
-                padding: 7.5px 15px;
-            }
-
-            .save,
-            .delete {
-                font-size: 16px;
-                font-weight: normal;
-                background-color: $blue;
-                text-decoration: none;
-                color: #ffffff;
-                padding: 7.5px 15px 10px 15px;
-                border-radius: 3px;
-                transition: background-color 0.3s ease-in-out;
-
-                &:hover {
-                    cursor: pointer;
-                    background-color: $blue-dk;
-                }
-            }
-
-            .save {
-                background-color: $blue;
-
-                &:hover {
-                    background-color: $blue-dk;
-                }
-            }
-
-            .delete {
-                background-color: lighten($red, 15%);
-
-                &:hover {
-                    background-color: lighten($red, 5%);
-                }
-            }
-        }
     }
 }
