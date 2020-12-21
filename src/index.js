@@ -6,12 +6,13 @@ import {
     container,
     loader,
     addIcon,
-    editIcon,
-    editDialog,
-    parseHtml
+    deleteIcon,
+    deleteDialog,
+    parseHtml,
+    editIcon
 } from './templates'
 
-// The scenario object
+// The scenario objects
 let s = {}
 
 // String dictionnary
@@ -19,14 +20,16 @@ const dictionnary = {
     transitions: {
         add: "Add transition",
         edit: "Edit transition",
+        delete: "Delete transition",
         dialog: {
             add: {
                 title: "Create a new transition"
             },
-            edit: {
-                title: "Edit a transition",
+            delete: {
+                title: "Delete a transition",
                 closeBtn: "Cancel",
-                saveBtn: "Save"
+                deleteBtn: "Delete",
+                msg: "<strong>Important:</strong> Deleting this transition will delete :count children transitions linked to it recursivel!"
             }
         }
     }
@@ -81,8 +84,8 @@ export function init(selector, scenario) {
 function attachEventListeners() {
     document.addEventListener('click', function (e) {
         const target = e.target
-        if (target.classList.contains('edit-btn')) {
-            editEventListener(target)
+        if (target.classList.contains('delete-btn')) {
+            deleteEventListener(target)
         }
         if (target.classList.contains('close-dialog')) {
             closeDialogEventListener(target)
@@ -135,17 +138,41 @@ function showScenario(transitions) {
 }
 
 /**
- * Event listener for the event "click" on transition edit button
+ * Event listener for the event "click" on transition delete button
  * @param element The element clicked
  */
-function editEventListener(element) {
-    const transitionId = element.getAttribute("data-transition-id")
-    document.querySelector(mainSelector).insertAdjacentHTML('beforeend', parseHtml(editDialog, {
-        title: dictionnary.transitions.dialog.edit.title,
-        closeBtn: dictionnary.transitions.dialog.edit.closeBtn,
-        saveBtn: dictionnary.transitions.dialog.edit.saveBtn
+function deleteEventListener(element) {
+    const transitionId = +element.getAttribute("data-transition-id")
+    const transition = findTransition(s.transitions, transitionId)
+    document.querySelector(mainSelector).insertAdjacentHTML('beforeend', parseHtml(deleteDialog, {
+        title: dictionnary.transitions.dialog.delete.title,
+        closeBtn: dictionnary.transitions.dialog.delete.closeBtn,
+        deleteBtn: dictionnary.transitions.dialog.delete.deleteBtn,
+        transitionOldStatus: transition.old_status ? transition.old_status.designation : '',
+        transitionAction: transition.action.designation,
+        transitionNewStatus: transition.new_status.designation,
+        deleteMsg: dictionnary.transitions.dialog.delete.msg.replace(':count', transition.children.length)
     }))
-    document.querySelector('#edit-transition-dialog').classList.add('show')
+    document.querySelector('#delete-transition-dialog').classList.add('show')
+}
+
+/**
+ * Find a transition from the scenario object based on it's id
+ * @param array transitions The transitions array
+ * @param number id The transition id
+ * 
+ * @return The transition object
+ */
+function findTransition(transitions, id) {
+    let result = null
+    transitions.forEach(transition => {
+        if (transition.id == id) {
+            result = transition
+        } else if (transition.children && transition.children.length && !result) {
+            result = findTransition(transition.children, id)
+        }
+    })
+    return result
 }
 
 /**
@@ -167,6 +194,7 @@ function showNode(transition) {
     node += '<li>'
     node += '<div class="node">'
     node += '<img src="' + editIcon + '" data-transition-id="' + transition.id + '" class="edit-btn" title="' + dictionnary.transitions.edit + '" />'
+    node += '<img src="' + deleteIcon + '" data-transition-id="' + transition.id + '" class="delete-btn" title="' + dictionnary.transitions.delete + '" />'
     node += '<div class="action" ' + (transition.action.designation.length > 15 ? 'title = "' + transition.action.designation + '"' : '') + '>' + transition.action.designation + '</div>'
     node += '<div class="status" ' + (transition.new_status.designation.length > 15 ? 'title = "' + transition.new_status.designation + '"' : '') + '>' + transition.new_status.designation + '</div>'
     node += '<img src="' + addIcon + '" data-transition-id="' + transition.id + '" class="add-btn" title="' + dictionnary.transitions.add + '" />'

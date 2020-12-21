@@ -1,6 +1,11 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
 
+// Variables
+$red: #ff0000;
+$blue-dk: #002A50;
+$blue: #22659c;
+
 // Container
 #workflow-makr-chart-container {
     position: absolute;
@@ -18,9 +23,6 @@
 }
 
 // Org chart
-$blue-dk: #002A50;
-$blue: #22659c;
-
 @mixin shadow($level: 1) {
     @if $level==1 {
         box-shadow: 0 1px 3px rgba(black, 0.12), 0 1px 2px rgba(black, 0.24);
@@ -158,12 +160,10 @@ body {
 
             &:not(.start):not(.end) {
 
-                // &:hover+ul li .node:not(.end) {
                 &:hover {
                     background: lighten($blue, 55%);
                     color: $blue-dk;
                     transition: all 0.15s;
-                    // box-shadow: inset 0 0 0 3px lighten($blue, 30%), 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
                 }
 
                 &:hover {
@@ -172,7 +172,12 @@ body {
                     +ul li::before,
                     +ul::before,
                     +ul ul::before {
+                        border-width: 2px;
                         border-color: #94a0b4;
+                    }
+
+                    +ul li:only-child::before {
+                        right: calc(50% - 2px);
                     }
                 }
             }
@@ -180,8 +185,13 @@ body {
             &:hover {
 
                 .add-btn,
+                .delete-btn,
                 .edit-btn {
-                    opacity: .9;
+                    opacity: .8;
+
+                    &:hover {
+                        opacity: 1;
+                    }
                 }
             }
 
@@ -213,6 +223,7 @@ body {
             }
 
             .add-btn,
+            .delete-btn,
             .edit-btn {
                 cursor: pointer;
                 text-decoration: none;
@@ -227,9 +238,16 @@ body {
                 right: calc(50% - 8.5px);
             }
 
-            .edit-btn {
+            .delete-btn {
                 top: 3px;
                 right: 3px;
+            }
+
+            .edit-btn {
+                top: 3px;
+                right: 25px;
+                border-radius: 50%;
+                background-color: transparent;
             }
 
             &.start {
@@ -317,7 +335,7 @@ body {
         content: "";
         position: absolute;
         top: 0;
-        left: 5px;
+        left: 6px;
         bottom: 0;
         right: 0;
         margin: auto;
@@ -431,7 +449,6 @@ body {
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.7);
-    transition: opacity 0.3s ease-in-out;
     visibility: hidden;
     opacity: 0;
     z-index: 3;
@@ -442,9 +459,18 @@ body {
         opacity: 1;
     }
 
-    &#edit-transition-dialog {
+    &#delete-transition-dialog {
         .popup {
             width: 500px;
+
+            .content {
+                p {
+                    padding: 20px 0 0 0;
+                    margin: 0;
+                    color: $red;
+                    text-align: center;
+                }
+            }
         }
     }
 
@@ -473,6 +499,108 @@ body {
             overflow: auto;
             padding: 20px;
             font-size: 16px;
+
+            .transition-meta {
+                display: grid;
+                font-size: 18px;
+                grid-gap: 3px;
+                grid-template-columns: repeat(3, 1fr) 1em;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10px;
+                width: 100%;
+
+                &>span {
+                    background-color: $blue;
+                    color: #ffffff;
+                    font-weight: 700;
+                    letter-spacing: 0.01em;
+                    line-height: 1.333em;
+                    padding: 0.667em 0.667em 0.667em 1.333em;
+                    position: relative;
+                    text-decoration: none;
+                    text-align: center;
+                    position: relative;
+
+                    &>span {
+                        position: absolute;
+                        top: -18px;
+                        left: 0;
+                        font-size: .6rem;
+                        color: $blue-dk;
+                        font-weight: 800;
+                    }
+
+                    .text {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 10ch;
+                    }
+
+                    &:nth-child(1) {
+                        background-color: lighten($blue, 45%);
+                        z-index: 3;
+                    }
+
+                    &:nth-child(2) {
+                        background-color: lighten($blue, 35%);
+                        z-index: 2;
+                    }
+
+                    &:nth-child(3) {
+                        background-color: lighten($blue, 25%);
+                        z-index: 1;
+                    }
+
+                    & {
+                        &:before {
+                            border-bottom: 1.333em solid transparent;
+                            border-left: 0.667em solid #ffffff;
+                            border-top: 1.333em solid transparent;
+                            bottom: 0;
+                            content: '';
+                            height: 0;
+                            left: 0;
+                            position: absolute;
+                            top: 0;
+                            width: 0;
+                        }
+
+                        &:after {
+                            border-bottom: 1.333em solid transparent;
+                            border-left: 0.667em solid;
+                            border-top: 1.333em solid transparent;
+                            bottom: 0;
+                            content: '';
+                            height: 0;
+                            position: absolute;
+                            right: 0;
+                            top: 0;
+                            transform: translateX(0.667em);
+                            width: 0;
+                        }
+
+                        &:nth-child(1) {
+                            &:after {
+                                border-left-color: lighten($blue, 45%);
+                            }
+                        }
+
+                        &:nth-child(2) {
+                            &:after {
+                                border-left-color: lighten($blue, 35%);
+                            }
+                        }
+
+                        &:nth-child(3) {
+                            &:after {
+                                border-left-color: lighten($blue, 25%);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         .header,
@@ -509,7 +637,8 @@ body {
                 padding: 7.5px 15px;
             }
 
-            .save {
+            .save,
+            .delete {
                 font-size: 16px;
                 font-weight: normal;
                 background-color: $blue;
@@ -522,6 +651,22 @@ body {
                 &:hover {
                     cursor: pointer;
                     background-color: $blue-dk;
+                }
+            }
+
+            .save {
+                background-color: $blue;
+
+                &:hover {
+                    background-color: $blue-dk;
+                }
+            }
+
+            .delete {
+                background-color: lighten($red, 15%);
+
+                &:hover {
+                    background-color: lighten($red, 5%);
                 }
             }
         }

@@ -9,7 +9,7 @@ const plugins = [
     resolve(),
     commonjs(),
     styles(),
-    terser()
+    // terser()
 ];
 
 export default [

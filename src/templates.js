@@ -12,22 +12,31 @@ export const addIcon =
 
 // Base 64 edit icon
 export const editIcon =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAABoUlEQVQ4jY2TMU8UURDHfzPLhguVFtiCwWZ36fgCJp6xutu3ja0WgNRHArGyNFdwlooQ4wcgYQ8qEv0IdtxRkUCNNdEcu2Nxx3m3t2v8Vy/z5jcz703+QlFhI0K8DYwlIBtFPYRrLDugf9qbTJfxaW3T5/amjdo8Qofz9HKq8KpbwWiRy28WFnf58XnAFBy6I0L3bGaiooK4TuiOWNv0AeYAuL1pI3ykn36vBKP4BTkNcnuLjhhoKWEjQm3+33CzCfIOkceovOei+w21GmEjUsTbQOhUwmESY5qA/xTjAcopAMIe4q0rxtLMh43f6xyYQ/w32N0nNG/T654BcJ5eYiwrf1c1CwvxGJYspXdyUsjK5srhOEFoDuHBPpIfl8DAcAveNJw8R/OX4L/CBvsgZZ3v5SnCNatuZRwSe43JQ/LBV4wu/eNuKRo1nyBcKZYdYLQmr8B+gn3hIk0rOgPawrLDEeI+EMT16uSCgrhOkHQAFIDaox1Etv6rSBDXEdliYXEXys1UQ9irMNM2ufyaNJNQ1NDO6xjLTNv5CssOi3b+AzI6mWmKNVc3AAAAAElFTkSuQmCC'
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB1ElEQVQ4jZWTTUiUURSGn/PNzx2SmEqNUhQKwS9y0KxAghZKKEPECLmthZUU0WJmEahbFxHkQIH9YJs2tRByoBoUaShXQUQlgeWYM5gQCrX1jjm3xdRM8zlf1Lu6HM5z73nvOUdwyo6EsDgPdIM0FIJmGZgmzzjzibk/06V4agorlIpjuFgWL5dBuIPWUdJJXbqgKazwB5JgOl1AhyRFbj1MOqktAJSK/zsMYDpRarRQgR0JYck7t7IDykfs7Cka91QzcneCL6vfS3byptXDbnsYpMMNHhro4+TxNiInjlHlF57Mvi36wJKcF+h2gydvDrLwOcOL1/MAZFe+OpyYHqvUqq1weinD4ZDN9qoAT1++If5wxpEpDZYTVn4fiVuDLC5laW+xef8pQ33tDq6NP2Zdb2yp1Po1JEVd7e/lWeoVh1qamVvIUlcTpC92g9yPfAWjZtkLTAP271BHazP762u4NzFD19EDnI66wYDIlIdqewWR4vTtrd1JcJuftdU1rlx/wIYbDAYjFwq9P9g7huGSW2bl1xnjw+TlwidqHQVJ/Qf+HK1jAB4AvqU3Ce57hNe7CzjC35fpNuI7w8dEjoqJdiSER85hTE/ZOotMsWnuO9f5J1WVkw2yAfLvAAAAAElFTkSuQmCC'
 
-// Edit dialog
-export const editDialog =
-  '<div id="edit-transition-dialog" class="overlay">\
+// Base 64 delete icon
+export const deleteIcon =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACD0lEQVQ4T42TTWsTURSG3zMTJ8Quou0PEKlx60fozSQVqaEU8zdctIIbwUX6QaHQTT9BEPsF/o5qqTK17QyTKoorbaL4B9rUhVTSmTlybzJxJo3i3d1z7/vcc95zLqFjOaZ5W/f9MSYqBsAVeaz5/nfo+htiXhMHBx+jEgo377LZi76uPwPwoBMaEzBveInE44LjnMq4ArTErwDc+Zc4PGPgbaDr9yVEAVwhXoQv942M4NiywI1GjKUlk7hcLOJoczOMr+cqlYcka9aC4L2MSnH/7CxObBvVcrkN0QwDmeVlpIVAbWoKx9vbCkLMt6gyMLDORKMqYBi4Pj+PdKGAH7aNw3JZ1ZhZWkI6l0N9Zwe1yUmw54VZrJIrRBXAtTASgzgOQIS0aaK+u4va+HhUDAa+kCNEQwMuxJyWmSwsIJ3Pq/DJ3h6qUnx2FvMlABpdAarmxUX1sgLs7zcBHcYqgJvNHkLXMyFaiVs1S6FclwYHu0KY6LP0YA3AmJq4ZLIpFqJZ88SE8iAzN9cVQszPZRduMtEH1cZSCf0zM+fclsaGkK/T0zja2lKZMdENNUjRVvYOD6MuB+lPq5o9Nwz0Dg1FxSum6z5SADufT2m+/5KAu/8zysRs/ezpKd2zrF/tzyQhCc97Gg7V30BMtHKaSj2R4vZnil5ueTLKQJGBq+oS0TctCF4HmrZhuu6n6P3fcCns3XprXkoAAAAASUVORK5CYII='
+
+// Delete confirmation dialog
+export const deleteDialog =
+  '<div id="delete-transition-dialog" class="overlay">\
     <div class="popup">\
       <div class="header">\
         <h2>{{ title }}</h2>\
-        <a class="close-dialog" data-target="#edit-transition-dialog">&times;</a>\
+        <a class="close-dialog" data-target="#delete-transition-dialog">&times;</a>\
       </div>\
       <div class="content">\
-        This is a dialog\
+        <div class="transition-meta">\
+        <span><span>Old status: </span><div class="text">{{ transitionOldStatus }}</div></span>\
+        <span><span>Action: </span><div class="text">{{ transitionAction }}</div></span>\
+        <span><span>New status: </span><div class="text">{{ transitionNewStatus }}</div></span>\
+        </div>\
+        <p>{{ deleteMsg }}</p>\
       </div>\
       <div class="footer">\
-        <a class="close-dialog" data-target="#edit-transition-dialog">{{ closeBtn }}</a>\
-        <a class="save">{{ saveBtn }}</a>\
+        <a class="close-dialog" data-target="#delete-transition-dialog">{{ closeBtn }}</a>\
+        <a class="delete">{{ deleteBtn }}</a>\
       </div>\
     </div>\
   </div>'
