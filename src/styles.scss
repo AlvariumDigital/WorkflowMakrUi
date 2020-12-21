@@ -132,6 +132,7 @@ body {
             background: #fff;
             min-width: 180px;
             border-radius: 6px;
+            position: relative;
             @include shadow(1);
 
             &.start,
@@ -147,6 +148,7 @@ body {
                 font-weight: 900;
                 letter-spacing: 1px;
                 color: #333;
+                position: relative;
             }
 
             &.end {
@@ -156,12 +158,12 @@ body {
 
             &:not(.start):not(.end) {
 
-                &:hover,
-                &:hover+ul li .node:not(.end) {
-                    background: lighten($blue, 45%);
+                // &:hover+ul li .node:not(.end) {
+                &:hover {
+                    background: lighten($blue, 55%);
                     color: $blue-dk;
                     transition: all 0.15s;
-                    box-shadow: inset 0 0 0 3px lighten($blue, 30%), 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+                    // box-shadow: inset 0 0 0 3px lighten($blue, 30%), 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
                 }
 
                 &:hover {
@@ -172,6 +174,14 @@ body {
                     +ul ul::before {
                         border-color: #94a0b4;
                     }
+                }
+            }
+
+            &:hover {
+
+                .add-btn,
+                .edit-btn {
+                    opacity: .9;
                 }
             }
 
@@ -192,7 +202,7 @@ body {
                 color: $blue;
                 text-transform: uppercase;
                 position: absolute;
-                top: 5px;
+                top: -15px;
                 font-size: 10px;
                 right: calc(50% - 45px);
                 width: 100%;
@@ -200,6 +210,32 @@ body {
                 background: #efefef;
                 padding: 0;
                 z-index: 2;
+            }
+
+            .add-btn,
+            .edit-btn {
+                cursor: pointer;
+                text-decoration: none;
+                position: absolute;
+                z-index: 2;
+                opacity: 0;
+                transition: opacity 0.2s ease-in-out;
+            }
+
+            .add-btn {
+                bottom: -22px;
+                right: calc(50% - 8.5px);
+            }
+
+            .edit-btn {
+                top: 3px;
+                right: 3px;
+            }
+
+            &.start {
+                .add-btn {
+                    bottom: -39px;
+                }
             }
 
             .status,

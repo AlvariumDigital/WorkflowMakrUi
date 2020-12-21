@@ -4,11 +4,21 @@ import './styles.scss'
 // Templating
 import {
     container,
-    loader
+    loader,
+    addIcon,
+    editIcon
 } from './templates'
 
 // The scenario object
 let s = {}
+
+// String dictionnary
+const dictionnary = {
+    transitions: {
+        add: "Add transition",
+        edit: "Edit transition"
+    }
+}
 
 /**
  * Initialize the workflow makr ui
@@ -55,9 +65,11 @@ function parseTransitions(transitions) {
     const t = []
     transitions.forEach(transition => {
         t.push({
+            id: transition.id,
             old_status: transition.old_status,
             new_status: transition.new_status,
             action: transition.action,
+            predecessor: transition.predecessor_id,
             transitions: parseTransitions(transition.children)
         })
     })
@@ -72,7 +84,12 @@ function showScenario(transitions) {
     let html = ''
     html += '<div id="workflow-makr-org-container">'
     html += '<div class="workflow-makr-org">'
-    html += '<ul><li><div class="node start">START</div>'
+    html += '<ul>'
+    html += '<li>'
+    html += '<div class="node start">'
+    html += 'START'
+    html += '<a data-transition-id="' + null + '" class="add-btn" title="' + dictionnary.transitions.add + '"><img src="' + addIcon + '" /></a>'
+    html += '</div>'
     html += '<ul>'
     transitions.forEach(transition => html += showNode(transition))
     html += '</ul>'
@@ -92,8 +109,10 @@ function showNode(transition) {
     let node = ''
     node += '<li>'
     node += '<div class="node">'
+    node += '<a data-transition-id="' + transition.id + '" class="edit-btn" title="' + dictionnary.transitions.edit + '"><img src="' + editIcon + '" /></a>'
     node += '<div class="action" ' + (transition.action.designation.length > 15 ? 'title = "' + transition.action.designation + '"' : '') + '>' + transition.action.designation + '</div>'
     node += '<div class="status" ' + (transition.new_status.designation.length > 15 ? 'title = "' + transition.new_status.designation + '"' : '') + '>' + transition.new_status.designation + '</div>'
+    node += '<a data-transition-id="' + transition.id + '" class="add-btn" title="' + dictionnary.transitions.add + '"><img src="' + addIcon + '" /></a>'
     node += '</div>'
     if (transition.transitions && transition.transitions.length) {
         node += '<ul>'
