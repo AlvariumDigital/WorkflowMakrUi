@@ -197,34 +197,6 @@ body {
                         right: calc(50% - 2px);
                     }
                 }
-
-                .loader {
-                    display: none;
-                }
-
-                &.deleting,
-                &.deleting+ul li .node:not(.end) {
-                    position: relative;
-
-                    &:after {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        left: 0;
-                        bottom: 0;
-                        width: 100%;
-                        height: 100%;
-                        background-color: rgba($blue-dk, .8);
-                        z-index: 3;
-                        border-radius: 6px;
-                    }
-
-                    .loader {
-                        display: block;
-                        z-index: 4;
-                    }
-                }
             }
 
             &:hover {
@@ -377,7 +349,8 @@ body {
 }
 
 // Page loading
-#loading-workflow-makr {
+#loading-workflow-makr,
+#deleting-transition-loader {
     position: fixed;
     top: 0;
     left: 0;
@@ -393,6 +366,10 @@ body {
     background-color: $blue;
     transition: opacity 0.45s ease-in-out;
     z-index: 999;
+}
+
+#deleting-transition-loader {
+    background-color: rgba($blue, .3);
 }
 
 .loader {
@@ -519,6 +496,77 @@ body {
 
     100% {
         transform: translate3d(0, 8px, 0) scale(0, 0);
+        opacity: 0;
+    }
+}
+
+// Snackbar
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: 0;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 20px;
+    bottom: 30px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
         opacity: 0;
     }
 }

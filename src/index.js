@@ -7,12 +7,16 @@ import {
     loader,
     addIcon,
     deleteIcon,
-    editIcon
+    editIcon,
+    deletingLoader,
+    snackbar,
+    parseHtml
 } from './templates'
 
 // The scenario objects
 let s = {}
 let levels = {}
+let c = {}
 
 // String dictionnary
 const dictionnary = {
@@ -25,6 +29,13 @@ const dictionnary = {
             deleteBtn: "Yes!",
             cancelBtn: "No"
         }
+    },
+    messages: {
+        transitions: {
+            delete: {
+                alreadyUsed: "The transition or/and one or more of it's children are already used"
+            }
+        }
     }
 }
 
@@ -36,26 +47,39 @@ let mainSelector = undefined
  * @param {*} config The workflow makr ui configuration
  */
 export function init(config) {
+    c = config
     parseConfig(config)
     mainSelector = config.selector
 
     // Initialize workflow makr ui container
     document.querySelector(mainSelector).innerHTML = container
     document.querySelector('#workflow-makr-chart-container').innerHTML = loader
-    console.log('Initializing the workflow makr ui...')
+    dd('Initializing the workflow makr ui...')
 
     // Load scenario data
+    loadScenario(config)
+
+    // Attach event listeners
+    attachEventListeners()
+}
+
+/**
+ * Load the scenario data and show it
+ */
+function loadScenario() {
     var xhr = new XMLHttpRequest()
-    console.log('Loading scenario...')
+    dd('Loading scenario...')
     xhr.onreadystatechange = function () {
         if (this.readyState != 4) return
         if (this.status == 200) {
             s = JSON.parse(this.responseText)
 
             // Show org chart
-            document.querySelector('#workflow-makr-chart-container #loading-workflow-makr').style.opacity = 0
+            const loader = document.querySelector('#workflow-makr-chart-container #loading-workflow-makr')
+            if (loader)
+                loader.style.opacity = 0
             setTimeout(() => {
-                console.log('Printing scenario...')
+                dd('Printing scenario...')
                 showScenario(parseTransitions(s.transitions))
                 reCalculateContainerWidth()
             }, 500)
@@ -65,17 +89,14 @@ export function init(config) {
             console.error("Error", this.status, this.statusText)
         }
     }
-    xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + config.scenario_id, true)
+    xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + c.scenario_id, true)
     xhr.setRequestHeader('accept', 'application/json')
-    if (config.request_headers) {
-        Object.keys(config.request_headers).forEach(function (key) {
-            xhr.setRequestHeader(key, config.request_headers[key])
+    if (c.request_headers) {
+        Object.keys(c.request_headers).forEach(function (key) {
+            xhr.setRequestHeader(key, c.request_headers[key])
         })
     }
     xhr.send()
-
-    // Attach event listeners
-    attachEventListeners()
 }
 
 /**
@@ -187,7 +208,47 @@ function cancelDeleteTransition(element) {
  * @param element The element clicked
  */
 function confirmDeleteTransition(element) {
-    document.querySelector('.node[data-transition="' + element.getAttribute('data-delete-transition') + '"]').classList.add('deleting')
+    document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', deletingLoader)
+    var xhr = new XMLHttpRequest()
+    dd('deleting transition...')
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return
+        if (this.status == 200) {
+            loadScenario()
+        }
+        if (this.status == 404) {
+            console.error('Failed deleting transition...')
+            console.error("Error", this.status, this.statusText)
+        }
+        if (this.status == 422) {
+            console.error('Failed deleting transition...')
+            console.error("Error", this.status, this.statusText)
+            document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', parseHtml(snackbar, {
+                msg: dictionnary.messages.transitions.delete.alreadyUsed
+            }))
+            document.querySelector('#deleting-transition-loader').remove()
+            showSnackbar()
+        }
+    }
+    xhr.open('DELETE', 'http://localhost:8000/workflowmakr/transitions/' + element.getAttribute('data-delete-transition'), true)
+    xhr.setRequestHeader('accept', 'application/json')
+    if (c.request_headers) {
+        Object.keys(c.request_headers).forEach(function (key) {
+            xhr.setRequestHeader(key, c.request_headers[key])
+        })
+    }
+    xhr.send()
+}
+
+/**
+ * Show the snackbar message
+ */
+function showSnackbar() {
+    const snackbar = document.getElementById("snackbar")
+    snackbar.classList.add('show')
+    setTimeout(function () {
+        document.querySelector('#snackbar').remove()
+    }, 3000)
 }
 
 /**
@@ -232,7 +293,6 @@ function showNode(transition) {
             <a data-cancel-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.cancelBtn + '</a>\
             </div>\
         </div>'
-    node += '<div class="loader"><span></span></div>'
     node += '</div>'
     if (transition.transitions && transition.transitions.length) {
         node += '<ul>'
@@ -240,24 +300,9 @@ function showNode(transition) {
             node += showNode(t)
         })
         node += '</ul>'
-    } else if (isLastTransition(transition)) {
-        node += '<ul>'
-        node += '<li class="end"><div class="node end">END</div></li>'
-        node += '</ul>'
     }
     node += '</li>'
     return node
-}
-
-/**
- * Check if the transition is of type end (no transition after it)
- * @param object transition The transition object
- * 
- * @return TRUE if the transition is the last, FALSE otherwise
- */
-function isLastTransition(transition) {
-    const statuses = getAllOldStatuses(s.transitions)
-    return !statuses.filter(s => s == transition.new_status.id).length
 }
 
 /**
@@ -288,5 +333,15 @@ function parseConfig(config) {
         Object.keys(config.i18n).forEach(function (key) {
             dictionnary[key] = config.i18n[key]
         })
+    }
+}
+
+/**
+ * Console a message if debug is enabled
+ * @param string msg The message to show in console
+ */
+function dd(msg) {
+    if (c && c.debug) {
+        console.log(msg)
     }
 }
