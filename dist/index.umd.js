@@ -133,6 +133,12 @@
             }
         };
         xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + config.scenario_id, true);
+        xhr.setRequestHeader('accept', 'application/json');
+        if (config.request_headers) {
+            Object.keys(config.request_headers).forEach(function (key) {
+                xhr.setRequestHeader(key, config.request_headers[key]);
+            });
+        }
         xhr.send();
 
         // Attach event listeners
