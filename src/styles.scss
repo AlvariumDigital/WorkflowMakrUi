@@ -180,6 +180,23 @@ body {
                         right: calc(50% - 2px);
                     }
                 }
+
+                &.to-delete,
+                &.to-delete+ul li .node:not(.end) {
+                    background: lighten($red, 35%);
+
+                    +ul li::after,
+                    +ul li::before,
+                    +ul::before,
+                    +ul ul::before {
+                        border-width: 2px;
+                        border-color: $red;
+                    }
+
+                    +ul li:only-child::before {
+                        right: calc(50% - 2px);
+                    }
+                }
             }
 
             &:hover {
@@ -262,6 +279,66 @@ body {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 15ch;
+            }
+
+            .delete-confirmation {
+                display: none;
+            }
+
+            &.to-delete {
+
+                .status {
+                    display: none;
+                }
+
+                &,
+                &+ul li .node:not(.end) {
+
+                    .edit-btn,
+                    .add-btn,
+                    .delete-btn {
+                        display: none;
+                    }
+                }
+
+                .delete-confirmation {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+
+                    &>div {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    p {
+                        font-size: 12px;
+                        font-weight: 600;
+                        margin-bottom: 5px;
+                    }
+
+                    a {
+                        padding: 5px 10px;
+                        border-radius: 6px;
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+                        background-color: #ffffff;
+
+                        &[data-delete-transition] {
+                            background-color: $red;
+                            margin-right: 5px;
+                            color: #ffffff;
+                        }
+
+                        &:hover {
+                            cursor: pointer;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.42);
+                        }
+                    }
+                }
             }
         }
     }

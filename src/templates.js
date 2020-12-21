@@ -18,29 +18,6 @@ export const editIcon =
 export const deleteIcon =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACD0lEQVQ4T42TTWsTURSG3zMTJ8Quou0PEKlx60fozSQVqaEU8zdctIIbwUX6QaHQTT9BEPsF/o5qqTK17QyTKoorbaL4B9rUhVTSmTlybzJxJo3i3d1z7/vcc95zLqFjOaZ5W/f9MSYqBsAVeaz5/nfo+htiXhMHBx+jEgo377LZi76uPwPwoBMaEzBveInE44LjnMq4ArTErwDc+Zc4PGPgbaDr9yVEAVwhXoQv942M4NiywI1GjKUlk7hcLOJoczOMr+cqlYcka9aC4L2MSnH/7CxObBvVcrkN0QwDmeVlpIVAbWoKx9vbCkLMt6gyMLDORKMqYBi4Pj+PdKGAH7aNw3JZ1ZhZWkI6l0N9Zwe1yUmw54VZrJIrRBXAtTASgzgOQIS0aaK+u4va+HhUDAa+kCNEQwMuxJyWmSwsIJ3Pq/DJ3h6qUnx2FvMlABpdAarmxUX1sgLs7zcBHcYqgJvNHkLXMyFaiVs1S6FclwYHu0KY6LP0YA3AmJq4ZLIpFqJZ88SE8iAzN9cVQszPZRduMtEH1cZSCf0zM+fclsaGkK/T0zja2lKZMdENNUjRVvYOD6MuB+lPq5o9Nwz0Dg1FxSum6z5SADufT2m+/5KAu/8zysRs/ezpKd2zrF/tzyQhCc97Gg7V30BMtHKaSj2R4vZnil5ueTLKQJGBq+oS0TctCF4HmrZhuu6n6P3fcCns3XprXkoAAAAASUVORK5CYII='
 
-// Delete confirmation dialog
-export const deleteDialog =
-  '<div id="delete-transition-dialog" class="overlay">\
-    <div class="popup">\
-      <div class="header">\
-        <h2>{{ title }}</h2>\
-        <a class="close-dialog" data-target="#delete-transition-dialog">&times;</a>\
-      </div>\
-      <div class="content">\
-        <div class="transition-meta">\
-        <span><span>{{ oldStatus }} </span><div class="text">{{ transitionOldStatus }}</div></span>\
-        <span><span>{{ action }} </span><div class="text">{{ transitionAction }}</div></span>\
-        <span><span>{{ newStatus }} </span><div class="text">{{ transitionNewStatus }}</div></span>\
-        </div>\
-        <p>{{ deleteMsg }}</p>\
-      </div>\
-      <div class="footer">\
-        <a class="close-dialog" data-target="#delete-transition-dialog">{{ closeBtn }}</a>\
-        <a class="delete">{{ deleteBtn }}</a>\
-      </div>\
-    </div>\
-  </div>'
-
 /**
  * Parse variables into an html string
  * @param string html The html string to parse

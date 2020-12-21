@@ -22,19 +22,10 @@ const dictionnary = {
         add: "Add transition",
         edit: "Edit transition",
         delete: "Delete transition",
-        dialog: {
-            add: {
-                title: "Create a new transition"
-            },
-            delete: {
-                title: "Delete a transition",
-                closeBtn: "Cancel",
-                deleteBtn: "Delete",
-                msg: "<strong>Important:</strong> Deleting this transition will delete :count children transitions linked to it recursively!",
-                oldStatus: "Old status:",
-                action: " Action:",
-                newStatus: "New status:"
-            }
+        deleteConfirmation: {
+            title: "Are you sure?",
+            deleteBtn: "Yes!",
+            cancelBtn: "No"
         }
     }
 }
@@ -98,8 +89,8 @@ function attachEventListeners() {
         if (target.classList.contains('delete-btn')) {
             deleteEventListener(target)
         }
-        if (target.classList.contains('close-dialog')) {
-            closeDialogEventListener(target)
+        if (target.getAttribute('data-cancel-delete-transition')) {
+            cancelDeleteTransition(target)
         }
     })
 }
@@ -176,19 +167,16 @@ function reCalculateContainerWidth() {
 function deleteEventListener(element) {
     const transitionId = +element.getAttribute("data-transition-id")
     const transition = findTransition(s.transitions, transitionId)
-    document.querySelector(mainSelector).insertAdjacentHTML('beforeend', parseHtml(deleteDialog, {
-        title: dictionnary.transitions.dialog.delete.title,
-        closeBtn: dictionnary.transitions.dialog.delete.closeBtn,
-        deleteBtn: dictionnary.transitions.dialog.delete.deleteBtn,
-        transitionOldStatus: transition.old_status ? transition.old_status.designation : '',
-        transitionAction: transition.action.designation,
-        transitionNewStatus: transition.new_status.designation,
-        deleteMsg: dictionnary.transitions.dialog.delete.msg.replace(':count', transition.children.length),
-        oldStatus: dictionnary.transitions.dialog.delete.oldStatus,
-        action: dictionnary.transitions.dialog.delete.action,
-        newStatus: dictionnary.transitions.dialog.delete.newStatus
-    }))
-    document.querySelector('#delete-transition-dialog').classList.add('show')
+    document.querySelector('.node.to-delete')?.classList.remove('to-delete')
+    document.querySelector('.node[data-transition="' + transitionId + '"]').classList.add('to-delete')
+}
+
+/**
+ * Event listener for the event "click" on cancel delete a transition
+ * @param element The element clicked
+ */
+function cancelDeleteTransition(element) {
+    document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-delete-transition') + '"]').classList.remove('to-delete')
 }
 
 /**
@@ -211,14 +199,6 @@ function findTransition(transitions, id) {
 }
 
 /**
- * Event listener for the event "click" on close dialog button
- * @param element The element clicked
- */
-function closeDialogEventListener(element) {
-    document.querySelector(element.getAttribute('data-target')).remove()
-}
-
-/**
  * Add a single node to scenario org chart html
  * @param object transition The transition object to show
  * 
@@ -227,12 +207,20 @@ function closeDialogEventListener(element) {
 function showNode(transition) {
     let node = ''
     node += '<li>'
-    node += '<div class="node">'
+    node += '<div class="node" data-transition="' + transition.id + '">'
     node += '<img src="' + editIcon + '" data-transition-id="' + transition.id + '" class="edit-btn" title="' + dictionnary.transitions.edit + '" />'
     node += '<img src="' + deleteIcon + '" data-transition-id="' + transition.id + '" class="delete-btn" title="' + dictionnary.transitions.delete + '" />'
     node += '<div class="action" ' + (transition.action.designation.length > 15 ? 'title = "' + transition.action.designation + '"' : '') + '>' + transition.action.designation + '</div>'
     node += '<div class="status" ' + (transition.new_status.designation.length > 15 ? 'title = "' + transition.new_status.designation + '"' : '') + '>' + transition.new_status.designation + '</div>'
     node += '<img src="' + addIcon + '" data-transition-id="' + transition.id + '" class="add-btn" title="' + dictionnary.transitions.add + '" />'
+    node +=
+        '<div class="delete-confirmation">\
+            <p>' + dictionnary.transitions.deleteConfirmation.title + '</p>\
+            <div>\
+            <a data-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.deleteBtn + '</a>\
+            <a data-cancel-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.cancelBtn + '</a>\
+            </div>\
+        </div>'
     node += '</div>'
     if (transition.transitions && transition.transitions.length) {
         node += '<ul>'
