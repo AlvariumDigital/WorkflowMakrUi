@@ -223,7 +223,7 @@ body {
             }
 
             .add-btn {
-                bottom: -22px;
+                bottom: -18px;
                 right: calc(50% - 8.5px);
             }
 
@@ -420,5 +420,109 @@ body {
     to {
         transform: translate3d(0, 0, 0);
         opacity: 1
+    }
+}
+
+// Dialog
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 0.3s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 3;
+    font-family: 'Lato', sans-serif;
+
+    &.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &#edit-transition-dialog {
+        .popup {
+            width: 500px;
+        }
+    }
+
+    .popup {
+        margin: 70px auto;
+        background: #fff;
+        border-radius: 5px;
+        min-width: 30%;
+        max-width: 90%;
+        position: relative;
+
+        .close-dialog {
+            transition: color 200ms;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .close-dialog:hover {
+            color: $blue;
+            cursor: pointer;
+        }
+
+        .content {
+            max-height: calc(90% - 60px - 60px);
+            overflow: auto;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .header,
+        .footer {
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .header,
+        .footer {
+            padding: 0 20px;
+        }
+
+        .header {
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 0, 0, .1);
+
+            h2 {
+                font-size: 18px;
+            }
+        }
+
+        .footer {
+            justify-content: flex-end;
+            border-top: 1px solid rgba(0, 0, 0, .1);
+            background-color: rgba(0, 0, 0, .05);
+
+            .close-dialog {
+                font-size: 14px;
+                font-weight: normal;
+                text-decoration: underline;
+                padding: 7.5px 15px;
+            }
+
+            .save {
+                font-size: 16px;
+                font-weight: normal;
+                background-color: $blue;
+                color: #ffffff;
+                padding: 7.5px 15px 10px 15px;
+                border-radius: 3px;
+                transition: background-color 0.3s ease-in-out;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: $blue-dk;
+                }
+            }
+        }
     }
 }
