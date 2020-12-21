@@ -505,7 +505,7 @@ body {
             .close-dialog {
                 font-size: 14px;
                 font-weight: normal;
-                text-decoration: underline;
+                text-decoration: none;
                 padding: 7.5px 15px;
             }
 
@@ -513,6 +513,7 @@ body {
                 font-size: 16px;
                 font-weight: normal;
                 background-color: $blue;
+                text-decoration: none;
                 color: #ffffff;
                 padding: 7.5px 15px 10px 15px;
                 border-radius: 3px;
