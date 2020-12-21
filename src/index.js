@@ -14,6 +14,7 @@ import {
 
 // The scenario objects
 let s = {}
+let levels = {}
 
 // String dictionnary
 const dictionnary = {
@@ -67,6 +68,7 @@ export function init(config) {
             setTimeout(() => {
                 console.log('Printing scenario...')
                 showScenario(parseTransitions(s.transitions))
+                reCalculateContainerWidth()
             }, 500)
         }
         if (this.status == 404) {
@@ -99,10 +101,12 @@ function attachEventListeners() {
 /**
  * Parse the transitions array into org chart format
  * @param array transitions The scenario transitions
+ * @param number index The index number
  * 
  * @return The array of the scenario transitions
  */
-function parseTransitions(transitions) {
+function parseTransitions(transitions, index = 0) {
+    index++
     const t = []
     transitions.forEach(transition => {
         t.push({
@@ -111,8 +115,12 @@ function parseTransitions(transitions) {
             new_status: transition.new_status,
             action: transition.action,
             predecessor: transition.predecessor_id,
-            transitions: parseTransitions(transition.children)
+            transitions: parseTransitions(transition.children, index)
         })
+        if (!levels['level-' + index]) {
+            levels['level-' + index] = []
+        }
+        levels['level-' + index].push(transition.id)
     })
     return t
 }
@@ -138,6 +146,21 @@ function showScenario(transitions) {
     html += '</div>'
     html += '</div>'
     document.querySelector('#workflow-makr-chart-container').innerHTML = html
+}
+
+/**
+ * Re calculate container width
+ */
+function reCalculateContainerWidth() {
+    let max = 0
+    if (levels) {
+        Object.keys(levels).forEach(function (key) {
+            if (levels[key].length > max) {
+                max = levels[key].length
+            }
+        })
+    }
+    document.querySelector('#workflow-makr-chart-container').style.minWidth = max * (200 * 1.8) + 'px'
 }
 
 /**
