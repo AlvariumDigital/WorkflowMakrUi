@@ -39,9 +39,9 @@
       </div>\
       <div class="content">\
         <div class="transition-meta">\
-        <span><span>Old status: </span><div class="text">{{ transitionOldStatus }}</div></span>\
-        <span><span>Action: </span><div class="text">{{ transitionAction }}</div></span>\
-        <span><span>New status: </span><div class="text">{{ transitionNewStatus }}</div></span>\
+        <span><span>{{ oldStatus }} </span><div class="text">{{ transitionOldStatus }}</div></span>\
+        <span><span>{{ action }} </span><div class="text">{{ transitionAction }}</div></span>\
+        <span><span>{{ newStatus }} </span><div class="text">{{ transitionNewStatus }}</div></span>\
         </div>\
         <p>{{ deleteMsg }}</p>\
       </div>\
@@ -85,7 +85,10 @@
                     title: "Delete a transition",
                     closeBtn: "Cancel",
                     deleteBtn: "Delete",
-                    msg: "<strong>Important:</strong> Deleting this transition will delete :count children transitions linked to it recursivel!"
+                    msg: "<strong>Important:</strong> Deleting this transition will delete :count children transitions linked to it recursively!",
+                    oldStatus: "Old status:",
+                    action: " Action:",
+                    newStatus: "New status:"
                 }
             }
         }
@@ -96,14 +99,14 @@
 
     /**
      * Initialize the workflow makr ui
-     * @param string selector The html selector for the canvas to put into the org chart
-     * @param number scenario The scenario id
+     * @param {*} config The workflow makr ui configuration
      */
-    function init(selector, scenario) {
-        mainSelector = selector;
+    function init(config) {
+        parseConfig(config);
+        mainSelector = config.selector;
 
         // Initialize workflow makr ui container
-        document.querySelector(selector).innerHTML = container;
+        document.querySelector(mainSelector).innerHTML = container;
         document.querySelector('#workflow-makr-chart-container').innerHTML = loader;
         console.log('Initializing the workflow makr ui...');
 
@@ -127,7 +130,7 @@
                 console.error("Error", this.status, this.statusText);
             }
         };
-        xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + scenario, true);
+        xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + config.scenario_id, true);
         xhr.send();
 
         // Attach event listeners
@@ -207,7 +210,10 @@
             transitionOldStatus: transition.old_status ? transition.old_status.designation : '',
             transitionAction: transition.action.designation,
             transitionNewStatus: transition.new_status.designation,
-            deleteMsg: dictionnary.transitions.dialog.delete.msg.replace(':count', transition.children.length)
+            deleteMsg: dictionnary.transitions.dialog.delete.msg.replace(':count', transition.children.length),
+            oldStatus: dictionnary.transitions.dialog.delete.oldStatus,
+            action: dictionnary.transitions.dialog.delete.action,
+            newStatus: dictionnary.transitions.dialog.delete.newStatus
         }));
         document.querySelector('#delete-transition-dialog').classList.add('show');
     }
@@ -298,6 +304,18 @@
             }
         });
         return statuses
+    }
+
+    /**
+     * Parse the configuration passed to the workflow makr ui init function
+     * @param {*} config The workflow makr ui configuration
+     */
+    function parseConfig(config) {
+        if (config.i18n) {
+            Object.keys(config.i18n).forEach(function (key) {
+                dictionnary[key] = config.i18n[key];
+            });
+        }
     }
 
     exports.init = init;

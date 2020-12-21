@@ -28,9 +28,9 @@ export const deleteDialog =
       </div>\
       <div class="content">\
         <div class="transition-meta">\
-        <span><span>Old status: </span><div class="text">{{ transitionOldStatus }}</div></span>\
-        <span><span>Action: </span><div class="text">{{ transitionAction }}</div></span>\
-        <span><span>New status: </span><div class="text">{{ transitionNewStatus }}</div></span>\
+        <span><span>{{ oldStatus }} </span><div class="text">{{ transitionOldStatus }}</div></span>\
+        <span><span>{{ action }} </span><div class="text">{{ transitionAction }}</div></span>\
+        <span><span>{{ newStatus }} </span><div class="text">{{ transitionNewStatus }}</div></span>\
         </div>\
         <p>{{ deleteMsg }}</p>\
       </div>\

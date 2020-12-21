@@ -8,11 +8,36 @@
 
 <body>
 
-    <div id="workflow-makr-canvas" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%;"></div>
+    <div id="workflow-makr-canvas"
+        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%;"></div>
 
     <script src="dist/index.umd.js"></script>
     <script>
-        workflowmakr.init('#workflow-makr-canvas', 1);
+        workflowmakr.init({
+            selector: '#workflow-makr-canvas',
+            scenario_id: 1,
+            i18n: {
+                transitions: {
+                    add: "Ajouter une transition",
+                    edit: "Modifier la transition",
+                    delete: "Supprimer la transition",
+                    dialog: {
+                        add: {
+                            title: "Créer une nouvelle transition"
+                        },
+                        delete: {
+                            title: "Supprimer la transition",
+                            closeBtn: "Annuler",
+                            deleteBtn: "Supprimer",
+                            msg: "<strong>Important :</strong> La suppression de cette transition supprimera :count transitions enfants qui lui sont liées de manière récursive!",
+                            oldStatus: "Ancien statut",
+                            action: "Action",
+                            newStatus: "Nouveau statut"
+                        }
+                    }
+                }
+            }
+        });
     </script>
 </body>
 
