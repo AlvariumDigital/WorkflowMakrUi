@@ -47,7 +47,7 @@ const dictionnary = {
             deleteBtn: "Yes!",
             cancelBtn: "No"
         },
-        updateForm: {
+        saveForm: {
             action: "Action",
             newStatus: "New status",
             saveBtn: "Save",
@@ -139,6 +139,13 @@ function loadScenario() {
 function attachEventListeners() {
     document.addEventListener('click', function (e) {
         const target = e.target
+        // Adding a transition
+        if (target.classList.contains('add-btn')) {
+            createEventListener(target)
+        }
+        if (target.getAttribute('data-cancel-create-transition')) {
+            cancelCreateTransition()
+        }
         // Updating a transition
         if (target.classList.contains('edit-btn')) {
             editEventListener(target)
@@ -205,15 +212,15 @@ function showScenario(transitions) {
     html += '<div id="workflow-makr-org-container">'
     html += '<div class="workflow-makr-org">'
     html += '<ul>'
-    html += '<li>'
-    html += '<div class="node start">'
-    html += 'START'
+    html += '<li data-transition="' + null + '">'
+    html += '<div class="node start" data-transition="' + null + '">'
     html += '<img src="' + addIcon + '" data-transition-id="' + null + '" class="add-btn" title="' + dictionnary.transitions.add + '"/>'
     html += '</div>'
-    html += '<ul>'
+    html += '<ul data-parent="' + null + '">'
     transitions.forEach(transition => html += showNode(transition))
     html += '</ul>'
-    html += '</li></ul>'
+    html += '</li>'
+    html += '</ul>'
     html += '</div>'
     html += '</div>'
     document.querySelector('#workflow-makr-chart-container').innerHTML = html
@@ -255,6 +262,62 @@ function deleteEventListener(element) {
  */
 function cancelDeleteTransition(element) {
     document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-delete-transition') + '"]').classList.remove('to-delete')
+}
+
+/**
+ * Event listener for the event "click" on add a transition
+ * @param element The element clicked
+ */
+function createEventListener(element) {
+    const transitionId = element.getAttribute('data-transition-id')
+    const transition = transitionId ? findTransition(s.transitions, element.getAttribute('data-transition-id')) : null
+    const node = document.querySelector('li[data-transition="' + transitionId + '"]')
+    let nodeChildren = document.querySelector('ul[data-parent="' + transitionId + '"]')
+    if (!nodeChildren) {
+        node.insertAdjacentHTML('beforeend', '<ul data-parent="' + transitionId + '"></ul>')
+        nodeChildren = document.querySelector('ul[data-parent="' + transitionId + '"]')
+    }
+    let newNode = ''
+    newNode += '<li class="to-create">'
+    newNode += '<div class="node to-create">'
+    newNode +=
+        '<form class="save-form">\
+            <label for="transition-action-to-create">' + dictionnary.transitions.saveForm.action + '</label>\
+            <div class="autocomplete-container">\
+                <div class="loader"><span></span></div>\
+                <input class="autocomplete" data-target-model="actions" data-target="#transition-action-autocomplete-to-create" id="transition-action-to-create" value="" />\
+                <div class="autocomplete-result" id="transition-action-autocomplete-to-create"></div>\
+            </div>\
+            <label for="transition-new-status-to-create">' + dictionnary.transitions.saveForm.newStatus + '</label>\
+            <div class="autocomplete-container">\
+                <div class="loader"><span></span></div>\
+                <input class="autocomplete" data-target-model="statuses" data-target="#transition-new-status-autocomplete-to-create" id="transition-new-status-to-create" value="" />\
+                <div class="autocomplete-result" id="transition-new-status-autocomplete-to-create"></div>\
+            </div>\
+            <div>\
+                <a data-create-transition="' + (transition ? transition.id : null) + '">' + dictionnary.transitions.saveForm.saveBtn + '</a>\
+                <a data-cancel-create-transition="true">' + dictionnary.transitions.saveForm.cancelBtn + '</a>\
+            </div>\
+        </form>'
+    newNode += '</div>'
+    newNode += '</li>'
+    nodeChildren.insertAdjacentHTML('afterbegin', newNode)
+    reCalculateContainerWidth()
+}
+
+/**
+ * 
+ * Event listener for the event "click" on cancel create a transition
+ */
+function cancelCreateTransition() {
+    let elements = document.querySelector('#workflow-makr-org-container li.to-create')
+    if (elements) {
+        elements.remove()
+    }
+    elements = document.querySelector('#workflow-makr-org-container ul:empty')
+    if (elements) {
+        elements.remove()
+    }
 }
 
 /**
@@ -470,7 +533,7 @@ function autocompleteClearAndHide(autocompleteContainer) {
  */
 function showNode(transition) {
     let node = ''
-    node += '<li>'
+    node += '<li data-transition="' + transition.id + '">'
     node += '<div class="node" data-transition="' + transition.id + '">'
     node += '<img src="' + editIcon + '" data-transition-id="' + transition.id + '" class="edit-btn" title="' + dictionnary.transitions.edit + '" />'
     node += '<img src="' + deleteIcon + '" data-transition-id="' + transition.id + '" class="delete-btn" title="' + dictionnary.transitions.delete + '" />'
@@ -487,26 +550,26 @@ function showNode(transition) {
         </div>'
     node +=
         '<form class="save-form">\
-            <label for="transition-action-' + transition.id + '">' + dictionnary.transitions.updateForm.action + '</label>\
+            <label for="transition-action-' + transition.id + '">' + dictionnary.transitions.saveForm.action + '</label>\
             <div class="autocomplete-container">\
                 <div class="loader"><span></span></div>\
                 <input class="autocomplete" data-target-model="actions" data-target="#transition-action-autocomplete-' + transition.id + '" id="transition-action-' + transition.id + '" value="' + transition.action.designation + '" />\
                 <div class="autocomplete-result" id="transition-action-autocomplete-' + transition.id + '"></div>\
             </div>\
-            <label for="transition-new-status-' + transition.id + '">' + dictionnary.transitions.updateForm.newStatus + '</label>\
+            <label for="transition-new-status-' + transition.id + '">' + dictionnary.transitions.saveForm.newStatus + '</label>\
             <div class="autocomplete-container">\
                 <div class="loader"><span></span></div>\
                 <input class="autocomplete" data-target-model="statuses" data-target="#transition-new-status-autocomplete-' + transition.id + '" id="transition-new-status-' + transition.id + '" value="' + transition.new_status.designation + '" />\
                 <div class="autocomplete-result" id="transition-new-status-autocomplete-' + transition.id + '"></div>\
             </div>\
             <div>\
-                <a data-update-transition="' + transition.id + '">' + dictionnary.transitions.updateForm.saveBtn + '</a>\
-                <a data-cancel-update-transition="' + transition.id + '">' + dictionnary.transitions.updateForm.cancelBtn + '</a>\
+                <a data-update-transition="' + transition.id + '">' + dictionnary.transitions.saveForm.saveBtn + '</a>\
+                <a data-cancel-update-transition="' + transition.id + '">' + dictionnary.transitions.saveForm.cancelBtn + '</a>\
             </div>\
         </form>'
     node += '</div>'
     if (transition.transitions && transition.transitions.length) {
-        node += '<ul>'
+        node += '<ul data-parent="' + transition.id + '">'
         transition.transitions.forEach(t => {
             node += showNode(t)
         })
@@ -522,9 +585,7 @@ function showNode(transition) {
  */
 function parseConfig(config) {
     if (config.i18n) {
-        Object.keys(config.i18n).forEach(function (key) {
-            dictionnary[key] = config.i18n[key]
-        })
+        dictionnary = config.i18n
     }
     if (config.toast_time_out) {
         c.toast_time_out = config.toast_time_out

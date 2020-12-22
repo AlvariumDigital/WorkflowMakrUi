@@ -286,7 +286,8 @@ body {
                 display: none;
             }
 
-            &.saving {
+            &.saving,
+            &.to-create {
                 background-color: lighten($blue, 55%);
 
                 .status,
@@ -335,7 +336,8 @@ body {
                             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
                             background-color: #ffffff;
 
-                            &[data-update-transition] {
+                            &[data-update-transition],
+                            &[data-create-transition] {
                                 background-color: $blue;
                                 margin-right: 5px;
                                 color: #ffffff;
