@@ -49,6 +49,9 @@ const dictionnary = {
             notResponding: "Error! The server is not responding.",
             internalError: "Error! The server encountered an internal error."
         },
+        scenario: {
+            updated: "The scenario is updated successfully"
+        },
         transitions: {
             notFound: "Error! Scenario not found.",
             delete: {
@@ -233,7 +236,6 @@ function reCalculateContainerWidth() {
  */
 function deleteEventListener(element) {
     const transitionId = +element.getAttribute("data-transition-id")
-    const transition = findTransition(s.transitions, transitionId)
     const elements = document.querySelector('.node.to-delete')
     if (elements)
         elements.classList.remove('to-delete')
@@ -260,6 +262,15 @@ function confirmDeleteTransition(element) {
         if (this.readyState != 4) return
         if (this.status == 200) {
             loadScenario()
+            Toastify({
+                text: dictionnary.messages.scenario.updated,
+                duration: c.toast_time_out,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: toastColors.success,
+                stopOnFocus: true
+            }).showToast();
         }
         if (this.status == 404) {
             console.error('Failed deleting transition...')
@@ -288,25 +299,6 @@ function confirmDeleteTransition(element) {
         })
     }
     xhr.send()
-}
-
-/**
- * Find a transition from the scenario object based on it's id
- * @param array transitions The transitions array
- * @param number id The transition id
- * 
- * @return The transition object
- */
-function findTransition(transitions, id) {
-    let result = null
-    transitions.forEach(transition => {
-        if (transition.id == id) {
-            result = transition
-        } else if (transition.children && transition.children.length && !result) {
-            result = findTransition(transition.children, id)
-        }
-    })
-    return result
 }
 
 /**
