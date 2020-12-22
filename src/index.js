@@ -106,35 +106,11 @@ function loadScenario() {
                 reCalculateContainerWidth()
             }, 500)
         } else if (this.status == 404) {
-            Toastify({
-                text: dictionnary.messages.transitions.notFound,
-                duration: c.toast_time_out,
-                close: true,
-                gravity: "top",
-                position: "right",
-                backgroundColor: toastColors.danger,
-                stopOnFocus: true
-            }).showToast();
+            toast(toastColors.danger, dictionnary.messages.transitions.notFound)
         } else if (this.status == 500) {
-            Toastify({
-                text: dictionnary.messages.server.internalError,
-                duration: c.toast_time_out,
-                close: true,
-                gravity: "top",
-                position: "right",
-                backgroundColor: toastColors.danger,
-                stopOnFocus: true
-            }).showToast();
+            toast(toastColors.danger, dictionnary.messages.server.internalError)
         } else {
-            Toastify({
-                text: dictionnary.messages.server.notResponding,
-                duration: c.toast_time_out,
-                close: true,
-                gravity: "top",
-                position: "right",
-                backgroundColor: toastColors.danger,
-                stopOnFocus: true
-            }).showToast();
+            toast(toastColors.danger, dictionnary.messages.server.notResponding)
         }
     }
     xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + c.scenario_id, true)
@@ -262,15 +238,7 @@ function confirmDeleteTransition(element) {
         if (this.readyState != 4) return
         if (this.status == 200) {
             loadScenario()
-            Toastify({
-                text: dictionnary.messages.scenario.updated,
-                duration: c.toast_time_out,
-                close: true,
-                gravity: "top",
-                position: "right",
-                backgroundColor: toastColors.success,
-                stopOnFocus: true
-            }).showToast();
+            toast(toastColors.success, dictionnary.messages.scenario.updated)
         }
         if (this.status == 404) {
             console.error('Failed deleting transition...')
@@ -279,15 +247,7 @@ function confirmDeleteTransition(element) {
         if (this.status == 422) {
             console.error('Failed deleting transition...')
             console.error("Error", this.status, this.statusText)
-            Toastify({
-                text: dictionnary.messages.transitions.delete.alreadyUsed,
-                duration: c.toast_time_out,
-                close: true,
-                gravity: "top",
-                position: "right",
-                backgroundColor: toastColors.warning,
-                stopOnFocus: true
-            }).showToast();
+            toast(toastColors.warning, dictionnary.messages.transitions.delete.alreadyUsed)
             document.querySelector('#deleting-transition-loader').remove()
         }
     }
@@ -337,25 +297,6 @@ function showNode(transition) {
 }
 
 /**
- * Get all the old_statuses from scenario transitions
- * @param array transitions The scenario object transitions
- * 
- * @return The array of all old_status items id
- */
-function getAllOldStatuses(transitions) {
-    let statuses = []
-    transitions.forEach(transition => {
-        if (transition.old_status) {
-            statuses.push(transition.old_status.id)
-        }
-        if (transition.children && transition.children.length) {
-            statuses = statuses.concat(getAllOldStatuses(transition.children))
-        }
-    })
-    return statuses
-}
-
-/**
  * Parse the configuration passed to the workflow makr ui init function
  * @param {*} config The workflow makr ui configuration
  */
@@ -380,4 +321,22 @@ function dd(msg) {
     if (c && c.debug) {
         console.log(msg)
     }
+}
+
+/**
+ * Show a toast message
+ * @param string backgroundColor The toast background color
+ * @param string message The message to show
+ */
+function toast(backgroundColor, message) {
+    const config = {
+        text: message,
+        duration: c.toast_time_out,
+        close: true,
+        gravity: "top",
+        position: "right",
+        backgroundColor: backgroundColor,
+        stopOnFocus: true
+    }
+    Toastify(config).showToast()
 }
