@@ -17,13 +17,13 @@ import Toastify from 'toastify-js'
 
 // toast colors
 const toastColors = {
-    primary: '#0d6efd',
+    primary: '#002A50',
     secondary: '#6c757d',
     success: '#198754',
     danger: '#dc3545',
     warning: '#ffc107',
     light: '#f8f9fa',
-    info: '#0dcaf0',
+    info: '#22659c',
     dark: '#212529'
 }
 
@@ -42,6 +42,12 @@ const dictionnary = {
             title: "Are you sure?",
             deleteBtn: "Yes!",
             cancelBtn: "No"
+        },
+        updateForm: {
+            action: "Action",
+            newStatus: "New status",
+            saveBtn: "Save",
+            cancelBtn: "Cancel"
         }
     },
     messages: {
@@ -129,6 +135,14 @@ function loadScenario() {
 function attachEventListeners() {
     document.addEventListener('click', function (e) {
         const target = e.target
+        // Updating a transition
+        if (target.classList.contains('edit-btn')) {
+            editEventListener(target)
+        }
+        if (target.getAttribute('data-cancel-update-transition')) {
+            cancelEditTransition(target)
+        }
+        // Deleting a transition
         if (target.classList.contains('delete-btn')) {
             deleteEventListener(target)
         }
@@ -137,6 +151,13 @@ function attachEventListeners() {
         }
         if (target.getAttribute('data-delete-transition')) {
             confirmDeleteTransition(target)
+        }
+    })
+    // Autocomplete listeners
+    document.addEventListener('keyup', function (e) {
+        const target = e.target
+        if (target.classList.contains('autocomplete')) {
+            autocompleteListener(target)
         }
     })
 }
@@ -212,9 +233,12 @@ function reCalculateContainerWidth() {
  */
 function deleteEventListener(element) {
     const transitionId = +element.getAttribute("data-transition-id")
-    const elements = document.querySelector('.node.to-delete')
-    if (elements)
-        elements.classList.remove('to-delete')
+    const toDeleteElements = document.querySelector('.node.to-delete')
+    if (toDeleteElements)
+        toDeleteElements.classList.remove('to-delete')
+    const savingElements = document.querySelector('.node.saving')
+    if (savingElements)
+        savingElements.classList.remove('saving')
     document.querySelector('.node[data-transition="' + transitionId + '"]').classList.add('to-delete')
 }
 
@@ -224,6 +248,32 @@ function deleteEventListener(element) {
  */
 function cancelDeleteTransition(element) {
     document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-delete-transition') + '"]').classList.remove('to-delete')
+}
+
+/**
+ * Event listener for the event "click" on transition edit button
+ * @param element The element clicked
+ */
+function editEventListener(element) {
+    const transitionId = +element.getAttribute("data-transition-id")
+    const elements = document.querySelector('.node.saving')
+    const toDeleteElements = document.querySelector('.node.to-delete')
+    if (toDeleteElements)
+        toDeleteElements.classList.remove('to-delete')
+    const savingElements = document.querySelector('.node.saving')
+    if (savingElements)
+        savingElements.classList.remove('saving')
+    document.querySelector('.node[data-transition="' + transitionId + '"]').classList.add('saving')
+}
+
+/**
+ * Event listener for the event "click" on cancel update a transition
+ * @param element The element clicked
+ */
+function cancelEditTransition(element) {
+    document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-update-transition') + '"]').classList.remove('saving')
+    document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-update-transition') + '"] form.save-form').reset()
+    document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-update-transition') + '"] .autocomplete-container').classList.remove('loading')
 }
 
 /**
@@ -262,6 +312,60 @@ function confirmDeleteTransition(element) {
 }
 
 /**
+ * Event fired on "keyup", "change" and "focus" events on autocomplete elements
+ * @param autocomplete The autocomplete element
+ */
+function autocompleteListener(autocomplete) {
+    const db = [
+        "Create",
+        "Update",
+        "Delete",
+        "Validate",
+        "Reject",
+        "Recall"
+    ]
+    const container = autocomplete.closest('.autocomplete-container')
+    container.classList.add('loading')
+    setTimeout(function() {
+        if (autocomplete.closest('.node').classList.contains('saving')) {
+            const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'))
+            if (!autocomplete.value) {
+                autocompleteClearAndHide(autocompleteContainer)
+                return
+            }
+            const autocompleteRejex = new RegExp("^" + autocomplete.value, "i")
+            let verified = false
+            let fragment = document.createDocumentFragment()
+            for (let i = 0; i < db.length; i++) {
+                if (autocompleteRejex.test(db[i])) {
+                    verified = true
+                    const element = document.createElement("p")
+                    element.innerText = db[i]
+                    element.setAttribute("onclick", "const autocomplete = document.querySelector('[data-target=\"" + autocomplete.getAttribute('data-target') + "\"]'); const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'));    autocomplete.value = this.innerText; autocompleteContainer.innerHTML = '';  autocompleteContainer.style.display = 'none';")
+                    fragment.appendChild(element)
+                }
+            }
+            if (verified == true) {
+                autocompleteContainer.innerHTML = ""
+                autocompleteContainer.style.display = "block"
+                autocompleteContainer.appendChild(fragment)
+                return
+            }
+            popupClearAndHide()
+        }
+    }, 300)
+}
+
+/**
+ * Clear the autocomplete container and hide it
+ * @param autocompleteContainer The autocomplete element
+ */
+function autocompleteClearAndHide(autocompleteContainer) {
+    autocompleteContainer.innerHTML = ""
+    autocompleteContainer.style.display = "none"
+}
+
+/**
  * Add a single node to scenario org chart html
  * @param object transition The transition object to show
  * 
@@ -280,10 +384,29 @@ function showNode(transition) {
         '<div class="delete-confirmation">\
             <p>' + dictionnary.transitions.deleteConfirmation.title + '</p>\
             <div>\
-            <a data-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.deleteBtn + '</a>\
-            <a data-cancel-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.cancelBtn + '</a>\
+                <a data-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.deleteBtn + '</a>\
+                <a data-cancel-delete-transition="' + transition.id + '">' + dictionnary.transitions.deleteConfirmation.cancelBtn + '</a>\
             </div>\
         </div>'
+    node +=
+        '<form class="save-form">\
+            <label for="transition-action-' + transition.id + '">' + dictionnary.transitions.updateForm.action + '</label>\
+            <div class="autocomplete-container">\
+                <div class="loader"><span></span></div>\
+                <input class="autocomplete" data-target="#transition-action-autocomplete-' + transition.id + '" id="transition-action-' + transition.id + '" value="' + transition.action.designation + '" />\
+                <div class="autocomplete-result" id="transition-action-autocomplete-' + transition.id + '"></div>\
+            </div>\
+            <label for="transition-new-status-' + transition.id + '">' + dictionnary.transitions.updateForm.newStatus + '</label>\
+            <div class="autocomplete-container">\
+                <div class="loader"><span></span></div>\
+                <input class="autocomplete" data-target="#transition-new-status-autocomplete-' + transition.id + '" id="transition-new-status-' + transition.id + '" value="' + transition.new_status.designation + '" />\
+                <div class="autocomplete-result" id="transition-new-status-autocomplete-' + transition.id + '"></div>\
+            </div>\
+            <div>\
+                <a data-update-transition="' + transition.id + '">' + dictionnary.transitions.updateForm.saveBtn + '</a>\
+                <a data-cancel-update-transition="' + transition.id + '">' + dictionnary.transitions.updateForm.cancelBtn + '</a>\
+            </div>\
+        </form>'
     node += '</div>'
     if (transition.transitions && transition.transitions.length) {
         node += '<ul>'
