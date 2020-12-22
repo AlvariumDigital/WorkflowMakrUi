@@ -415,7 +415,8 @@ body {
 
 // Page loading
 #loading-workflow-makr,
-#deleting-transition-loader {
+#deleting-transition-loader,
+#saving-transition-loader {
     position: fixed;
     top: 0;
     left: 0;
@@ -433,7 +434,8 @@ body {
     z-index: 999;
 }
 
-#deleting-transition-loader {
+#deleting-transition-loader,
+#saving-transition-loader {
     background-color: rgba($blue, .3);
 }
 
@@ -591,6 +593,15 @@ body {
 // Toastify
 .toastify {
     font-family: 'Lato', sans-serif;
+
+    ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+            list-style: none;
+        }
+    }
 }
 
 // Autocomplete
@@ -656,8 +667,9 @@ body {
     z-index: 3;
 
     p {
-        padding: 5px;
+        padding: 5px 10px;
         margin: 0;
+        text-align: left;
         color: #000;
 
         &:nth-child(2n+1) {

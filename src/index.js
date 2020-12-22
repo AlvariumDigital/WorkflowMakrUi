@@ -9,7 +9,8 @@ import {
     addIcon,
     deleteIcon,
     editIcon,
-    deletingLoader
+    deletingLoader,
+    savingLoader
 } from './templates'
 
 // Librairies
@@ -31,6 +32,9 @@ const toastColors = {
 let s = {}
 let levels = {}
 let c = {}
+
+// Autocomplete helper
+let acl = false
 
 // String dictionnary
 const dictionnary = {
@@ -119,7 +123,7 @@ function loadScenario() {
             toast(toastColors.danger, dictionnary.messages.server.notResponding)
         }
     }
-    xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + c.scenario_id, true)
+    xhr.open('GET', c.path + '/workflowmakr/scenarios/' + c.scenario_id, true)
     xhr.setRequestHeader('accept', 'application/json')
     if (c.request_headers) {
         Object.keys(c.request_headers).forEach(function (key) {
@@ -141,6 +145,9 @@ function attachEventListeners() {
         }
         if (target.getAttribute('data-cancel-update-transition')) {
             cancelEditTransition(target)
+        }
+        if (target.getAttribute('data-update-transition')) {
+            confirmEditTransition(target)
         }
         // Deleting a transition
         if (target.classList.contains('delete-btn')) {
@@ -277,13 +284,84 @@ function cancelEditTransition(element) {
 }
 
 /**
+ * Event listener for the event "click" on confirm update a transition
+ * @param element The element clicked
+ */
+function confirmEditTransition(element) {
+    document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', savingLoader)
+    var xhr = new XMLHttpRequest()
+    dd('Updating transition...')
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return
+        if (this.status == 200) {
+            loadScenario()
+            toast(toastColors.success, dictionnary.messages.scenario.updated)
+        }
+        if (this.status == 404) {
+            console.error('Failed deleting transition...')
+            console.error("Error", this.status, this.statusText)
+        }
+        if (this.status == 422) {
+            console.error('Failed deleting transition...')
+            console.error("Error", this.status, this.statusText)
+            const body = JSON.parse(this.responseText).messages
+            let messages = "<p>"
+            if (body.new_status) {
+                body.new_status.forEach(item => messages += item + "<br />")
+            }
+            if (body.action) {
+                body.action.forEach(item => messages += item + "<br />")
+            }
+            messages += "</p>"
+            toast(toastColors.warning, messages)
+            document.querySelector('#saving-transition-loader').remove()
+        }
+    }
+    xhr.open('PUT', c.path + '/workflowmakr/transitions/' + element.getAttribute('data-update-transition'), true)
+    xhr.setRequestHeader('accept', 'application/json')
+    if (c.request_headers) {
+        Object.keys(c.request_headers).forEach(function (key) {
+            xhr.setRequestHeader(key, c.request_headers[key])
+        })
+    }
+    const actionSelector = '.node[data-transition="' + element.getAttribute('data-update-transition') + '"] .save-form input#transition-action-' + element.getAttribute('data-update-transition')
+    const newStatusSelector = '.node[data-transition="' + element.getAttribute('data-update-transition') + '"] .save-form input#transition-new-status-' + element.getAttribute('data-update-transition')
+    const transition = findTransition(s.transitions, +element.getAttribute('data-update-transition'))
+    xhr.send(JSON.stringify({
+        action: document.querySelector(actionSelector).value,
+        old_status: (transition.old_status) ? transition.old_status.designation : null,
+        new_status: document.querySelector(newStatusSelector).value,
+        predecessor_id: transition.predecessor_id
+    }))
+}
+
+/**
+ * Find a transition from the scenario object based on it's id
+ * @param array transitions The transitions array
+ * @param number id The transition id
+ * 
+ * @return The transition object
+ */
+function findTransition(transitions, id) {
+    let result = null
+    transitions.forEach(transition => {
+        if (transition.id == id) {
+            result = transition
+        } else if (transition.children && transition.children.length && !result) {
+            result = findTransition(transition.children, id)
+        }
+    })
+    return result
+}
+
+/**
  * Event listener for the event "click" on confirm delete a transition
  * @param element The element clicked
  */
 function confirmDeleteTransition(element) {
     document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', deletingLoader)
     var xhr = new XMLHttpRequest()
-    dd('deleting transition...')
+    dd('Deleting transition...')
     xhr.onreadystatechange = function () {
         if (this.readyState != 4) return
         if (this.status == 200) {
@@ -301,7 +379,7 @@ function confirmDeleteTransition(element) {
             document.querySelector('#deleting-transition-loader').remove()
         }
     }
-    xhr.open('DELETE', 'http://localhost:8000/workflowmakr/transitions/' + element.getAttribute('data-delete-transition'), true)
+    xhr.open('DELETE', c.path + '/workflowmakr/transitions/' + element.getAttribute('data-delete-transition'), true)
     xhr.setRequestHeader('accept', 'application/json')
     if (c.request_headers) {
         Object.keys(c.request_headers).forEach(function (key) {
@@ -316,44 +394,63 @@ function confirmDeleteTransition(element) {
  * @param autocomplete The autocomplete element
  */
 function autocompleteListener(autocomplete) {
-    const db = [
-        "Create",
-        "Update",
-        "Delete",
-        "Validate",
-        "Reject",
-        "Recall"
-    ]
-    const container = autocomplete.closest('.autocomplete-container')
-    container.classList.add('loading')
-    setTimeout(function() {
-        if (autocomplete.closest('.node').classList.contains('saving')) {
-            const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'))
-            if (!autocomplete.value) {
-                autocompleteClearAndHide(autocompleteContainer)
-                return
-            }
-            const autocompleteRejex = new RegExp("^" + autocomplete.value, "i")
-            let verified = false
-            let fragment = document.createDocumentFragment()
-            for (let i = 0; i < db.length; i++) {
-                if (autocompleteRejex.test(db[i])) {
-                    verified = true
-                    const element = document.createElement("p")
-                    element.innerText = db[i]
-                    element.setAttribute("onclick", "const autocomplete = document.querySelector('[data-target=\"" + autocomplete.getAttribute('data-target') + "\"]'); const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'));    autocomplete.value = this.innerText; autocompleteContainer.innerHTML = '';  autocompleteContainer.style.display = 'none';")
-                    fragment.appendChild(element)
+    if (!acl) {
+        acl = true
+        const container = autocomplete.closest('.autocomplete-container')
+        container.classList.add('loading')
+        setTimeout(function () {
+            if (autocomplete.closest('.node').classList.contains('saving')) {
+                const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'))
+                if (!autocomplete.value) {
+                    container.classList.remove('loading')
+                    acl = false
+                    autocompleteClearAndHide(autocompleteContainer)
+                    return
                 }
+                var xhr = new XMLHttpRequest()
+                dd('Loading scenario...')
+                xhr.onreadystatechange = function () {
+                    container.classList.remove('loading')
+                    acl = false
+                    if (this.readyState != 4) return
+                    if (this.status == 200) {
+                        const autocompleteRejex = new RegExp("^" + autocomplete.value, "i")
+                        let verified = false
+                        let fragment = document.createDocumentFragment()
+                        const db = JSON.parse(this.responseText).data.map(item => item.designation)
+                        for (let i = 0; i < db.length; i++) {
+                            if (autocompleteRejex.test(db[i])) {
+                                verified = true
+                                const element = document.createElement("p")
+                                element.innerText = db[i]
+                                element.setAttribute("onclick", "const autocomplete = document.querySelector('[data-target=\"" + autocomplete.getAttribute('data-target') + "\"]'); const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'));    autocomplete.value = this.innerText; autocompleteContainer.innerHTML = '';  autocompleteContainer.style.display = 'none';")
+                                fragment.appendChild(element)
+                            }
+                        }
+                        if (verified == true) {
+                            autocompleteContainer.innerHTML = ""
+                            autocompleteContainer.style.display = "block"
+                            autocompleteContainer.appendChild(fragment)
+                            return
+                        }
+                        autocompleteClearAndHide(autocompleteContainer)
+                    } else if (this.status == 500) {
+                        toast(toastColors.danger, dictionnary.messages.server.internalError)
+                    } else {
+                        toast(toastColors.danger, dictionnary.messages.server.notResponding)
+                    }
+                }
+                xhr.open('GET', c.path + '/workflowmakr/' + autocomplete.getAttribute('data-target-model') + '?q=' + autocomplete.value, true)
+                xhr.setRequestHeader('accept', 'application/json')
+                if (c.request_headers) {
+                    Object.keys(c.request_headers).forEach(function (key) {
+                        xhr.setRequestHeader(key, c.request_headers[key])
+                    })
+                }
+                xhr.send()
             }
-            if (verified == true) {
-                autocompleteContainer.innerHTML = ""
-                autocompleteContainer.style.display = "block"
-                autocompleteContainer.appendChild(fragment)
-                return
-            }
-            popupClearAndHide()
-        }
-    }, 300)
+        }, 300)
+    }
 }
 
 /**
@@ -393,13 +490,13 @@ function showNode(transition) {
             <label for="transition-action-' + transition.id + '">' + dictionnary.transitions.updateForm.action + '</label>\
             <div class="autocomplete-container">\
                 <div class="loader"><span></span></div>\
-                <input class="autocomplete" data-target="#transition-action-autocomplete-' + transition.id + '" id="transition-action-' + transition.id + '" value="' + transition.action.designation + '" />\
+                <input class="autocomplete" data-target-model="actions" data-target="#transition-action-autocomplete-' + transition.id + '" id="transition-action-' + transition.id + '" value="' + transition.action.designation + '" />\
                 <div class="autocomplete-result" id="transition-action-autocomplete-' + transition.id + '"></div>\
             </div>\
             <label for="transition-new-status-' + transition.id + '">' + dictionnary.transitions.updateForm.newStatus + '</label>\
             <div class="autocomplete-container">\
                 <div class="loader"><span></span></div>\
-                <input class="autocomplete" data-target="#transition-new-status-autocomplete-' + transition.id + '" id="transition-new-status-' + transition.id + '" value="' + transition.new_status.designation + '" />\
+                <input class="autocomplete" data-target-model="statuses" data-target="#transition-new-status-autocomplete-' + transition.id + '" id="transition-new-status-' + transition.id + '" value="' + transition.new_status.designation + '" />\
                 <div class="autocomplete-result" id="transition-new-status-autocomplete-' + transition.id + '"></div>\
             </div>\
             <div>\

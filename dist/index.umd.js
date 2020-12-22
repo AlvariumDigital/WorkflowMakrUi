@@ -6,7 +6,7 @@
 
     var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-    var css = "@import url(\"https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;800;900&display=swap\");\n#workflow-makr-chart-container {\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  background-color: #efefef;\n  overflow: auto;\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start; }\n\n* {\n  margin: 0;\n  padding: 0; }\n\nbody {\n  background: #22659c; }\n\n.workflow-makr-org {\n  display: flex;\n  justify-content: center;\n  font-family: 'Lato', sans-serif; }\n  .workflow-makr-org ul {\n    padding-top: 20px;\n    position: relative;\n    transition: all 0.5s; }\n    .workflow-makr-org ul ul::before {\n      content: '';\n      position: absolute;\n      top: 0;\n      left: 50%;\n      border-left: 1px solid #ccc;\n      width: 50%;\n      height: 20px; }\n  .workflow-makr-org li {\n    float: left;\n    text-align: center;\n    list-style-type: none;\n    position: relative;\n    padding: 20px 10px;\n    transition: all 0.5s; }\n    .workflow-makr-org li.end {\n      float: none;\n      margin: 0 auto; }\n    .workflow-makr-org li::before, .workflow-makr-org li::after {\n      content: '';\n      position: absolute;\n      top: 0;\n      right: 50%;\n      border-top: 1px solid #ccc;\n      width: 50%;\n      height: 19px; }\n    .workflow-makr-org li::after {\n      right: auto;\n      left: 50%;\n      border-left: 1px solid #ccc; }\n    .workflow-makr-org li:only-child::after, .workflow-makr-org li:only-child::before {\n      border-radius: 0 !important;\n      right: calc(50% - 1px); }\n    .workflow-makr-org li:first-child::before, .workflow-makr-org li:last-child::after {\n      border: 0 none; }\n    .workflow-makr-org li:last-child::before {\n      border-right: 1px solid #ccc;\n      border-radius: 0 6px 0 0; }\n    .workflow-makr-org li:first-child::after {\n      border-radius: 6px 0 0 0; }\n    .workflow-makr-org li .node {\n      text-decoration: none;\n      color: #666;\n      display: inline-block;\n      padding: 20px 10px;\n      transition: all 0.5s;\n      background: #fff;\n      width: 180px;\n      border-radius: 6px;\n      position: relative;\n      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); }\n      .workflow-makr-org li .node.start, .workflow-makr-org li .node.end {\n        width: 50px;\n        min-width: 50px;\n        height: 50px;\n        border-radius: 50%;\n        padding: 0;\n        background: #cecece;\n        line-height: 50px;\n        font-size: 10px;\n        font-weight: 900;\n        letter-spacing: 1px;\n        color: #333;\n        position: relative; }\n      .workflow-makr-org li .node.end {\n        background: #22659c;\n        color: #fff; }\n      .workflow-makr-org li .node:not(.start):not(.end):hover {\n        background: #dfecf8;\n        color: #002A50;\n        transition: all 0.15s; }\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul li::after,\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul li::before,\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul::before,\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul ul::before {\n        border-width: 2px;\n        border-color: #94a0b4; }\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul li:only-child::before {\n        right: calc(50% - 2px); }\n      .workflow-makr-org li .node:not(.start):not(.end).to-delete,\n      .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) {\n        background: #f6cdd1; }\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li::after,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul ul::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul li::after,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul li::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul ul::before {\n          border-width: 2px;\n          border-color: #dc3545; }\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li:only-child::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul li:only-child::before {\n          right: calc(50% - 2px); }\n      .workflow-makr-org li .node:hover .add-btn,\n      .workflow-makr-org li .node:hover .delete-btn,\n      .workflow-makr-org li .node:hover .edit-btn {\n        opacity: .8; }\n        .workflow-makr-org li .node:hover .add-btn:hover,\n        .workflow-makr-org li .node:hover .delete-btn:hover,\n        .workflow-makr-org li .node:hover .edit-btn:hover {\n          opacity: 1; }\n      .workflow-makr-org li .node > div,\n      .workflow-makr-org li .node > a {\n        font-size: 12px; }\n      .workflow-makr-org li .node .status {\n        font-size: 18px;\n        float: none;\n        margin: 0 auto; }\n      .workflow-makr-org li .node .action {\n        font-weight: 700;\n        font-size: 13px;\n        color: #22659c;\n        text-transform: uppercase;\n        position: absolute;\n        top: -15px;\n        font-size: 10px;\n        right: calc(50% - 45px);\n        width: 100%;\n        text-align: center;\n        background: #efefef;\n        padding: 0;\n        z-index: 2; }\n      .workflow-makr-org li .node .add-btn,\n      .workflow-makr-org li .node .delete-btn,\n      .workflow-makr-org li .node .edit-btn {\n        cursor: pointer;\n        text-decoration: none;\n        position: absolute;\n        z-index: 2;\n        opacity: 0;\n        transition: opacity 0.2s ease-in-out; }\n      .workflow-makr-org li .node .add-btn {\n        bottom: -18px;\n        right: calc(50% - 8.5px); }\n      .workflow-makr-org li .node .delete-btn {\n        top: 3px;\n        right: 3px; }\n      .workflow-makr-org li .node .edit-btn {\n        top: 3px;\n        right: 25px;\n        border-radius: 50%;\n        background-color: transparent; }\n      .workflow-makr-org li .node.start .add-btn {\n        bottom: -18px; }\n      .workflow-makr-org li .node .status,\n      .workflow-makr-org li .node .action {\n        white-space: nowrap;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        max-width: 15ch; }\n      .workflow-makr-org li .node .delete-confirmation,\n      .workflow-makr-org li .node .save-form {\n        display: none; }\n      .workflow-makr-org li .node.saving {\n        background-color: #dfecf8; }\n        .workflow-makr-org li .node.saving .status,\n        .workflow-makr-org li .node.saving .action,\n        .workflow-makr-org li .node.saving .edit-btn,\n        .workflow-makr-org li .node.saving .add-btn,\n        .workflow-makr-org li .node.saving .delete-btn {\n          display: none; }\n        .workflow-makr-org li .node.saving .save-form {\n          display: flex;\n          flex-direction: column;\n          justify-content: center;\n          align-items: flex-start; }\n          .workflow-makr-org li .node.saving .save-form label {\n            font-size: 11px;\n            font-weight: 800;\n            margin-bottom: 5px; }\n          .workflow-makr-org li .node.saving .save-form input {\n            background-color: transparent;\n            outline: none;\n            box-shadow: none;\n            border: none;\n            border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n            padding: 5px;\n            margin-bottom: 10px;\n            font-size: 13px;\n            font-weight: 300;\n            width: calc(100% - 10px); }\n          .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) {\n            width: 100%;\n            display: flex;\n            flex-direction: row;\n            justify-content: center;\n            align-items: center; }\n            .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) a {\n              padding: 5px 10px;\n              border-radius: 6px;\n              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);\n              background-color: #ffffff; }\n              .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) a[data-update-transition] {\n                background-color: #22659c;\n                margin-right: 5px;\n                color: #ffffff; }\n              .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) a:hover {\n                cursor: pointer;\n                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.42); }\n      .workflow-makr-org li .node.to-delete .status {\n        display: none; }\n      .workflow-makr-org li .node.to-delete .edit-btn,\n      .workflow-makr-org li .node.to-delete .add-btn,\n      .workflow-makr-org li .node.to-delete .delete-btn,\n      .workflow-makr-org li .node.to-delete + ul li .node:not(.end) .edit-btn,\n      .workflow-makr-org li .node.to-delete + ul li .node:not(.end) .add-btn,\n      .workflow-makr-org li .node.to-delete + ul li .node:not(.end) .delete-btn {\n        display: none; }\n      .workflow-makr-org li .node.to-delete .delete-confirmation {\n        display: flex;\n        flex-direction: column;\n        justify-content: center;\n        align-items: center;\n        text-align: center; }\n        .workflow-makr-org li .node.to-delete .delete-confirmation > div {\n          display: flex;\n          flex-direction: row;\n          justify-content: space-between;\n          align-items: center; }\n        .workflow-makr-org li .node.to-delete .delete-confirmation p {\n          font-size: 12px;\n          font-weight: 600;\n          margin-bottom: 5px; }\n        .workflow-makr-org li .node.to-delete .delete-confirmation a {\n          padding: 5px 10px;\n          border-radius: 6px;\n          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);\n          background-color: #ffffff; }\n          .workflow-makr-org li .node.to-delete .delete-confirmation a[data-delete-transition] {\n            background-color: #dc3545;\n            margin-right: 5px;\n            color: #ffffff; }\n          .workflow-makr-org li .node.to-delete .delete-confirmation a:hover {\n            cursor: pointer;\n            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.42); }\n  .workflow-makr-org > ul > li:before {\n    border: 0 none !important; }\n\n#loading-workflow-makr,\n#deleting-transition-loader {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 100%;\n  width: 100%;\n  min-width: 1200px;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  background-color: #22659c;\n  transition: opacity 0.45s ease-in-out;\n  z-index: 999; }\n\n#deleting-transition-loader {\n  background-color: rgba(34, 101, 156, 0.3); }\n\n.loader {\n  height: 32px;\n  width: 32px;\n  display: block;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  right: 0;\n  margin: auto; }\n  .loader span {\n    display: block;\n    position: absolute;\n    top: 0;\n    left: 0;\n    bottom: 0;\n    right: 0;\n    margin: auto;\n    height: 32px;\n    width: 32px; }\n  .loader span::before {\n    content: \"\";\n    display: block;\n    position: absolute;\n    top: 0;\n    left: 0;\n    bottom: 0;\n    right: 0;\n    margin: auto;\n    height: 32px;\n    width: 32px;\n    border: 3px solid #FFF;\n    border-bottom: 3px solid transparent;\n    border-radius: 50%;\n    -webkit-animation: loader-1 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;\n    animation: loader-1 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite; }\n  .loader span::after {\n    content: \"\";\n    position: absolute;\n    top: 0;\n    left: 6px;\n    bottom: 0;\n    right: 0;\n    margin: auto;\n    width: 6px;\n    height: 6px;\n    background: #FFF;\n    border-radius: 50%;\n    -webkit-animation: loader-2 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;\n    animation: loader-2 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite; }\n\n@-webkit-keyframes loader-1 {\n  0% {\n    -webkit-transform: rotate(0deg); }\n  40% {\n    -webkit-transform: rotate(180deg); }\n  60% {\n    -webkit-transform: rotate(180deg); }\n  100% {\n    -webkit-transform: rotate(360deg); } }\n\n@keyframes loader-1 {\n  0% {\n    transform: rotate(0deg); }\n  40% {\n    transform: rotate(180deg); }\n  60% {\n    transform: rotate(180deg); }\n  100% {\n    transform: rotate(360deg); } }\n\n@-webkit-keyframes loader-2 {\n  0% {\n    -webkit-transform: translate3d(0, -32px, 0) scale(0, 2);\n    opacity: 0; }\n  50% {\n    -webkit-transform: translate3d(0, 0, 0) scale(1.25, 1.25);\n    opacity: 1; }\n  100% {\n    -webkit-transform: translate3d(0, 8px, 0) scale(0, 0);\n    opacity: 0; } }\n\n@keyframes loader-2 {\n  0% {\n    transform: translate3d(0, -32px, 0) scale(0, 2);\n    opacity: 0; }\n  50% {\n    transform: translate3d(0, 0, 0) scale(1.25, 1.25);\n    opacity: 1; }\n  100% {\n    transform: translate3d(0, 8px, 0) scale(0, 0);\n    opacity: 0; } }\n\n@keyframes fadeInUp {\n  from {\n    transform: translate3d(0, -40px, 0); }\n  to {\n    transform: translate3d(0, 0, 0);\n    opacity: 1; } }\n\n@-webkit-keyframes fadeInUp {\n  from {\n    transform: translate3d(0, -40px, 0); }\n  to {\n    transform: translate3d(0, 0, 0);\n    opacity: 1; } }\n\n.toastify {\n  font-family: 'Lato', sans-serif; }\n\n.autocomplete-container {\n  position: relative; }\n  .autocomplete-container input {\n    height: 26px; }\n  .autocomplete-container .loader {\n    visibility: hidden;\n    opacity: 0;\n    width: 20px;\n    height: 20px;\n    top: 0;\n    right: 12px;\n    left: unset;\n    bottom: unset; }\n    .autocomplete-container .loader > span {\n      height: 20px;\n      width: 20px; }\n      .autocomplete-container .loader > span:before {\n        height: 20px;\n        width: 20px;\n        border: 3px solid #8bbde6;\n        border-bottom: 3px solid transparent; }\n      .autocomplete-container .loader > span:after {\n        width: 4px;\n        height: 4px;\n        background: #8bbde6; }\n  .autocomplete-container.loading .loader {\n    visibility: visible;\n    opacity: 1; }\n\n.autocomplete,\n.autocomplete-result {\n  box-sizing: border-box; }\n\n.autocomplete-result {\n  display: none;\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  border-top: 0;\n  position: absolute;\n  overflow: auto;\n  max-height: 93px;\n  background: #fff;\n  width: 100%;\n  top: 27px;\n  z-index: 3; }\n  .autocomplete-result p {\n    padding: 5px;\n    margin: 0;\n    color: #000; }\n    .autocomplete-result p:nth-child(2n+1) {\n      background: #f6f6f6; }\n    .autocomplete-result p:hover {\n      cursor: pointer;\n      background: #e5e5e5; }\n";
+    var css = "@import url(\"https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;800;900&display=swap\");\n#workflow-makr-chart-container {\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  background-color: #efefef;\n  overflow: auto;\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start; }\n\n* {\n  margin: 0;\n  padding: 0; }\n\nbody {\n  background: #22659c; }\n\n.workflow-makr-org {\n  display: flex;\n  justify-content: center;\n  font-family: 'Lato', sans-serif; }\n  .workflow-makr-org ul {\n    padding-top: 20px;\n    position: relative;\n    transition: all 0.5s; }\n    .workflow-makr-org ul ul::before {\n      content: '';\n      position: absolute;\n      top: 0;\n      left: 50%;\n      border-left: 1px solid #ccc;\n      width: 50%;\n      height: 20px; }\n  .workflow-makr-org li {\n    float: left;\n    text-align: center;\n    list-style-type: none;\n    position: relative;\n    padding: 20px 10px;\n    transition: all 0.5s; }\n    .workflow-makr-org li.end {\n      float: none;\n      margin: 0 auto; }\n    .workflow-makr-org li::before, .workflow-makr-org li::after {\n      content: '';\n      position: absolute;\n      top: 0;\n      right: 50%;\n      border-top: 1px solid #ccc;\n      width: 50%;\n      height: 19px; }\n    .workflow-makr-org li::after {\n      right: auto;\n      left: 50%;\n      border-left: 1px solid #ccc; }\n    .workflow-makr-org li:only-child::after, .workflow-makr-org li:only-child::before {\n      border-radius: 0 !important;\n      right: calc(50% - 1px); }\n    .workflow-makr-org li:first-child::before, .workflow-makr-org li:last-child::after {\n      border: 0 none; }\n    .workflow-makr-org li:last-child::before {\n      border-right: 1px solid #ccc;\n      border-radius: 0 6px 0 0; }\n    .workflow-makr-org li:first-child::after {\n      border-radius: 6px 0 0 0; }\n    .workflow-makr-org li .node {\n      text-decoration: none;\n      color: #666;\n      display: inline-block;\n      padding: 20px 10px;\n      transition: all 0.5s;\n      background: #fff;\n      width: 180px;\n      border-radius: 6px;\n      position: relative;\n      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); }\n      .workflow-makr-org li .node.start, .workflow-makr-org li .node.end {\n        width: 50px;\n        min-width: 50px;\n        height: 50px;\n        border-radius: 50%;\n        padding: 0;\n        background: #cecece;\n        line-height: 50px;\n        font-size: 10px;\n        font-weight: 900;\n        letter-spacing: 1px;\n        color: #333;\n        position: relative; }\n      .workflow-makr-org li .node.end {\n        background: #22659c;\n        color: #fff; }\n      .workflow-makr-org li .node:not(.start):not(.end):hover {\n        background: #dfecf8;\n        color: #002A50;\n        transition: all 0.15s; }\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul li::after,\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul li::before,\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul::before,\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul ul::before {\n        border-width: 2px;\n        border-color: #94a0b4; }\n      .workflow-makr-org li .node:not(.start):not(.end):hover + ul li:only-child::before {\n        right: calc(50% - 2px); }\n      .workflow-makr-org li .node:not(.start):not(.end).to-delete,\n      .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) {\n        background: #f6cdd1; }\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li::after,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul ul::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul li::after,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul li::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul ul::before {\n          border-width: 2px;\n          border-color: #dc3545; }\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li:only-child::before,\n        .workflow-makr-org li .node:not(.start):not(.end).to-delete + ul li .node:not(.end) + ul li:only-child::before {\n          right: calc(50% - 2px); }\n      .workflow-makr-org li .node:hover .add-btn,\n      .workflow-makr-org li .node:hover .delete-btn,\n      .workflow-makr-org li .node:hover .edit-btn {\n        opacity: .8; }\n        .workflow-makr-org li .node:hover .add-btn:hover,\n        .workflow-makr-org li .node:hover .delete-btn:hover,\n        .workflow-makr-org li .node:hover .edit-btn:hover {\n          opacity: 1; }\n      .workflow-makr-org li .node > div,\n      .workflow-makr-org li .node > a {\n        font-size: 12px; }\n      .workflow-makr-org li .node .status {\n        font-size: 18px;\n        float: none;\n        margin: 0 auto; }\n      .workflow-makr-org li .node .action {\n        font-weight: 700;\n        font-size: 13px;\n        color: #22659c;\n        text-transform: uppercase;\n        position: absolute;\n        top: -15px;\n        font-size: 10px;\n        right: calc(50% - 45px);\n        width: 100%;\n        text-align: center;\n        background: #efefef;\n        padding: 0;\n        z-index: 2; }\n      .workflow-makr-org li .node .add-btn,\n      .workflow-makr-org li .node .delete-btn,\n      .workflow-makr-org li .node .edit-btn {\n        cursor: pointer;\n        text-decoration: none;\n        position: absolute;\n        z-index: 2;\n        opacity: 0;\n        transition: opacity 0.2s ease-in-out; }\n      .workflow-makr-org li .node .add-btn {\n        bottom: -18px;\n        right: calc(50% - 8.5px); }\n      .workflow-makr-org li .node .delete-btn {\n        top: 3px;\n        right: 3px; }\n      .workflow-makr-org li .node .edit-btn {\n        top: 3px;\n        right: 25px;\n        border-radius: 50%;\n        background-color: transparent; }\n      .workflow-makr-org li .node.start .add-btn {\n        bottom: -18px; }\n      .workflow-makr-org li .node .status,\n      .workflow-makr-org li .node .action {\n        white-space: nowrap;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        max-width: 15ch; }\n      .workflow-makr-org li .node .delete-confirmation,\n      .workflow-makr-org li .node .save-form {\n        display: none; }\n      .workflow-makr-org li .node.saving {\n        background-color: #dfecf8; }\n        .workflow-makr-org li .node.saving .status,\n        .workflow-makr-org li .node.saving .action,\n        .workflow-makr-org li .node.saving .edit-btn,\n        .workflow-makr-org li .node.saving .add-btn,\n        .workflow-makr-org li .node.saving .delete-btn {\n          display: none; }\n        .workflow-makr-org li .node.saving .save-form {\n          display: flex;\n          flex-direction: column;\n          justify-content: center;\n          align-items: flex-start; }\n          .workflow-makr-org li .node.saving .save-form label {\n            font-size: 11px;\n            font-weight: 800;\n            margin-bottom: 5px; }\n          .workflow-makr-org li .node.saving .save-form input {\n            background-color: transparent;\n            outline: none;\n            box-shadow: none;\n            border: none;\n            border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n            padding: 5px;\n            margin-bottom: 10px;\n            font-size: 13px;\n            font-weight: 300;\n            width: calc(100% - 10px); }\n          .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) {\n            width: 100%;\n            display: flex;\n            flex-direction: row;\n            justify-content: center;\n            align-items: center; }\n            .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) a {\n              padding: 5px 10px;\n              border-radius: 6px;\n              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);\n              background-color: #ffffff; }\n              .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) a[data-update-transition] {\n                background-color: #22659c;\n                margin-right: 5px;\n                color: #ffffff; }\n              .workflow-makr-org li .node.saving .save-form > div:not(.autocomplete-result) a:hover {\n                cursor: pointer;\n                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.42); }\n      .workflow-makr-org li .node.to-delete .status {\n        display: none; }\n      .workflow-makr-org li .node.to-delete .edit-btn,\n      .workflow-makr-org li .node.to-delete .add-btn,\n      .workflow-makr-org li .node.to-delete .delete-btn,\n      .workflow-makr-org li .node.to-delete + ul li .node:not(.end) .edit-btn,\n      .workflow-makr-org li .node.to-delete + ul li .node:not(.end) .add-btn,\n      .workflow-makr-org li .node.to-delete + ul li .node:not(.end) .delete-btn {\n        display: none; }\n      .workflow-makr-org li .node.to-delete .delete-confirmation {\n        display: flex;\n        flex-direction: column;\n        justify-content: center;\n        align-items: center;\n        text-align: center; }\n        .workflow-makr-org li .node.to-delete .delete-confirmation > div {\n          display: flex;\n          flex-direction: row;\n          justify-content: space-between;\n          align-items: center; }\n        .workflow-makr-org li .node.to-delete .delete-confirmation p {\n          font-size: 12px;\n          font-weight: 600;\n          margin-bottom: 5px; }\n        .workflow-makr-org li .node.to-delete .delete-confirmation a {\n          padding: 5px 10px;\n          border-radius: 6px;\n          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);\n          background-color: #ffffff; }\n          .workflow-makr-org li .node.to-delete .delete-confirmation a[data-delete-transition] {\n            background-color: #dc3545;\n            margin-right: 5px;\n            color: #ffffff; }\n          .workflow-makr-org li .node.to-delete .delete-confirmation a:hover {\n            cursor: pointer;\n            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.42); }\n  .workflow-makr-org > ul > li:before {\n    border: 0 none !important; }\n\n#loading-workflow-makr,\n#deleting-transition-loader,\n#saving-transition-loader {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 100%;\n  width: 100%;\n  min-width: 1200px;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  background-color: #22659c;\n  transition: opacity 0.45s ease-in-out;\n  z-index: 999; }\n\n#deleting-transition-loader,\n#saving-transition-loader {\n  background-color: rgba(34, 101, 156, 0.3); }\n\n.loader {\n  height: 32px;\n  width: 32px;\n  display: block;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  right: 0;\n  margin: auto; }\n  .loader span {\n    display: block;\n    position: absolute;\n    top: 0;\n    left: 0;\n    bottom: 0;\n    right: 0;\n    margin: auto;\n    height: 32px;\n    width: 32px; }\n  .loader span::before {\n    content: \"\";\n    display: block;\n    position: absolute;\n    top: 0;\n    left: 0;\n    bottom: 0;\n    right: 0;\n    margin: auto;\n    height: 32px;\n    width: 32px;\n    border: 3px solid #FFF;\n    border-bottom: 3px solid transparent;\n    border-radius: 50%;\n    -webkit-animation: loader-1 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;\n    animation: loader-1 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite; }\n  .loader span::after {\n    content: \"\";\n    position: absolute;\n    top: 0;\n    left: 6px;\n    bottom: 0;\n    right: 0;\n    margin: auto;\n    width: 6px;\n    height: 6px;\n    background: #FFF;\n    border-radius: 50%;\n    -webkit-animation: loader-2 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;\n    animation: loader-2 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite; }\n\n@-webkit-keyframes loader-1 {\n  0% {\n    -webkit-transform: rotate(0deg); }\n  40% {\n    -webkit-transform: rotate(180deg); }\n  60% {\n    -webkit-transform: rotate(180deg); }\n  100% {\n    -webkit-transform: rotate(360deg); } }\n\n@keyframes loader-1 {\n  0% {\n    transform: rotate(0deg); }\n  40% {\n    transform: rotate(180deg); }\n  60% {\n    transform: rotate(180deg); }\n  100% {\n    transform: rotate(360deg); } }\n\n@-webkit-keyframes loader-2 {\n  0% {\n    -webkit-transform: translate3d(0, -32px, 0) scale(0, 2);\n    opacity: 0; }\n  50% {\n    -webkit-transform: translate3d(0, 0, 0) scale(1.25, 1.25);\n    opacity: 1; }\n  100% {\n    -webkit-transform: translate3d(0, 8px, 0) scale(0, 0);\n    opacity: 0; } }\n\n@keyframes loader-2 {\n  0% {\n    transform: translate3d(0, -32px, 0) scale(0, 2);\n    opacity: 0; }\n  50% {\n    transform: translate3d(0, 0, 0) scale(1.25, 1.25);\n    opacity: 1; }\n  100% {\n    transform: translate3d(0, 8px, 0) scale(0, 0);\n    opacity: 0; } }\n\n@keyframes fadeInUp {\n  from {\n    transform: translate3d(0, -40px, 0); }\n  to {\n    transform: translate3d(0, 0, 0);\n    opacity: 1; } }\n\n@-webkit-keyframes fadeInUp {\n  from {\n    transform: translate3d(0, -40px, 0); }\n  to {\n    transform: translate3d(0, 0, 0);\n    opacity: 1; } }\n\n.toastify {\n  font-family: 'Lato', sans-serif; }\n  .toastify ul {\n    list-style: none;\n    padding: 0; }\n    .toastify ul li {\n      list-style: none; }\n\n.autocomplete-container {\n  position: relative; }\n  .autocomplete-container input {\n    height: 26px; }\n  .autocomplete-container .loader {\n    visibility: hidden;\n    opacity: 0;\n    width: 20px;\n    height: 20px;\n    top: 0;\n    right: 12px;\n    left: unset;\n    bottom: unset; }\n    .autocomplete-container .loader > span {\n      height: 20px;\n      width: 20px; }\n      .autocomplete-container .loader > span:before {\n        height: 20px;\n        width: 20px;\n        border: 3px solid #8bbde6;\n        border-bottom: 3px solid transparent; }\n      .autocomplete-container .loader > span:after {\n        width: 4px;\n        height: 4px;\n        background: #8bbde6; }\n  .autocomplete-container.loading .loader {\n    visibility: visible;\n    opacity: 1; }\n\n.autocomplete,\n.autocomplete-result {\n  box-sizing: border-box; }\n\n.autocomplete-result {\n  display: none;\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  border-top: 0;\n  position: absolute;\n  overflow: auto;\n  max-height: 93px;\n  background: #fff;\n  width: 100%;\n  top: 27px;\n  z-index: 3; }\n  .autocomplete-result p {\n    padding: 5px 10px;\n    margin: 0;\n    text-align: left;\n    color: #000; }\n    .autocomplete-result p:nth-child(2n+1) {\n      background: #f6f6f6; }\n    .autocomplete-result p:hover {\n      cursor: pointer;\n      background: #e5e5e5; }\n";
     n(css,{});
 
     var css$1 = "/*!\n * Toastify js 1.9.3\n * https://github.com/apvarun/toastify-js\n * @license MIT licensed\n *\n * Copyright (C) 2018 Varun A P\n */\n\n.toastify {\n    padding: 12px 20px;\n    color: #ffffff;\n    display: inline-block;\n    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);\n    background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5);\n    background: linear-gradient(135deg, #73a5ff, #5477f5);\n    position: fixed;\n    opacity: 0;\n    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);\n    border-radius: 2px;\n    cursor: pointer;\n    text-decoration: none;\n    max-width: calc(50% - 20px);\n    z-index: 2147483647;\n}\n\n.toastify.on {\n    opacity: 1;\n}\n\n.toast-close {\n    opacity: 0.4;\n    padding: 0 5px;\n}\n\n.toastify-right {\n    right: 15px;\n}\n\n.toastify-left {\n    left: 15px;\n}\n\n.toastify-top {\n    top: -150px;\n}\n\n.toastify-bottom {\n    bottom: -150px;\n}\n\n.toastify-rounded {\n    border-radius: 25px;\n}\n\n.toastify-avatar {\n    width: 1.5em;\n    height: 1.5em;\n    margin: -7px 5px;\n    border-radius: 2px;\n}\n\n.toastify-center {\n    margin-left: auto;\n    margin-right: auto;\n    left: 0;\n    right: 0;\n    max-width: fit-content;\n    max-width: -moz-fit-content;\n}\n\n@media only screen and (max-width: 360px) {\n    .toastify-right, .toastify-left {\n        margin-left: auto;\n        margin-right: auto;\n        left: 0;\n        right: 0;\n        max-width: fit-content;\n    }\n}\n";
@@ -23,6 +23,10 @@
     // Deleting a transition loader
     const deletingLoader =
       '<div id="deleting-transition-loader"><div class="loader"><span></span></div></div>';
+
+    // Saving a transition loader
+    const savingLoader =
+    '<div id="saving-transition-loader"><div class="loader"><span></span></div></div>';
 
     // Base 64 add icon
     const addIcon =
@@ -460,6 +464,9 @@
     let levels = {};
     let c = {};
 
+    // Autocomplete helper
+    let acl = false;
+
     // String dictionnary
     const dictionnary = {
         transitions: {
@@ -547,7 +554,7 @@
                 toast(toastColors.danger, dictionnary.messages.server.notResponding);
             }
         };
-        xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + c.scenario_id, true);
+        xhr.open('GET', c.path + '/workflowmakr/scenarios/' + c.scenario_id, true);
         xhr.setRequestHeader('accept', 'application/json');
         if (c.request_headers) {
             Object.keys(c.request_headers).forEach(function (key) {
@@ -569,6 +576,9 @@
             }
             if (target.getAttribute('data-cancel-update-transition')) {
                 cancelEditTransition(target);
+            }
+            if (target.getAttribute('data-update-transition')) {
+                confirmEditTransition(target);
             }
             // Deleting a transition
             if (target.classList.contains('delete-btn')) {
@@ -705,13 +715,84 @@
     }
 
     /**
+     * Event listener for the event "click" on confirm update a transition
+     * @param element The element clicked
+     */
+    function confirmEditTransition(element) {
+        document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', savingLoader);
+        var xhr = new XMLHttpRequest();
+        dd('Updating transition...');
+        xhr.onreadystatechange = function () {
+            if (this.readyState != 4) return
+            if (this.status == 200) {
+                loadScenario();
+                toast(toastColors.success, dictionnary.messages.scenario.updated);
+            }
+            if (this.status == 404) {
+                console.error('Failed deleting transition...');
+                console.error("Error", this.status, this.statusText);
+            }
+            if (this.status == 422) {
+                console.error('Failed deleting transition...');
+                console.error("Error", this.status, this.statusText);
+                const body = JSON.parse(this.responseText).messages;
+                let messages = "<p>";
+                if (body.new_status) {
+                    body.new_status.forEach(item => messages += item + "<br />");
+                }
+                if (body.action) {
+                    body.action.forEach(item => messages += item + "<br />");
+                }
+                messages += "</p>";
+                toast(toastColors.warning, messages);
+                document.querySelector('#saving-transition-loader').remove();
+            }
+        };
+        xhr.open('PUT', c.path + '/workflowmakr/transitions/' + element.getAttribute('data-update-transition'), true);
+        xhr.setRequestHeader('accept', 'application/json');
+        if (c.request_headers) {
+            Object.keys(c.request_headers).forEach(function (key) {
+                xhr.setRequestHeader(key, c.request_headers[key]);
+            });
+        }
+        const actionSelector = '.node[data-transition="' + element.getAttribute('data-update-transition') + '"] .save-form input#transition-action-' + element.getAttribute('data-update-transition');
+        const newStatusSelector = '.node[data-transition="' + element.getAttribute('data-update-transition') + '"] .save-form input#transition-new-status-' + element.getAttribute('data-update-transition');
+        const transition = findTransition(s.transitions, +element.getAttribute('data-update-transition'));
+        xhr.send(JSON.stringify({
+            action: document.querySelector(actionSelector).value,
+            old_status: (transition.old_status) ? transition.old_status.designation : null,
+            new_status: document.querySelector(newStatusSelector).value,
+            predecessor_id: transition.predecessor_id
+        }));
+    }
+
+    /**
+     * Find a transition from the scenario object based on it's id
+     * @param array transitions The transitions array
+     * @param number id The transition id
+     * 
+     * @return The transition object
+     */
+    function findTransition(transitions, id) {
+        let result = null;
+        transitions.forEach(transition => {
+            if (transition.id == id) {
+                result = transition;
+            } else if (transition.children && transition.children.length && !result) {
+                result = findTransition(transition.children, id);
+            }
+        });
+        return result
+    }
+
+    /**
      * Event listener for the event "click" on confirm delete a transition
      * @param element The element clicked
      */
     function confirmDeleteTransition(element) {
         document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', deletingLoader);
         var xhr = new XMLHttpRequest();
-        dd('deleting transition...');
+        dd('Deleting transition...');
         xhr.onreadystatechange = function () {
             if (this.readyState != 4) return
             if (this.status == 200) {
@@ -729,7 +810,7 @@
                 document.querySelector('#deleting-transition-loader').remove();
             }
         };
-        xhr.open('DELETE', 'http://localhost:8000/workflowmakr/transitions/' + element.getAttribute('data-delete-transition'), true);
+        xhr.open('DELETE', c.path + '/workflowmakr/transitions/' + element.getAttribute('data-delete-transition'), true);
         xhr.setRequestHeader('accept', 'application/json');
         if (c.request_headers) {
             Object.keys(c.request_headers).forEach(function (key) {
@@ -744,44 +825,63 @@
      * @param autocomplete The autocomplete element
      */
     function autocompleteListener(autocomplete) {
-        const db = [
-            "Create",
-            "Update",
-            "Delete",
-            "Validate",
-            "Reject",
-            "Recall"
-        ];
-        const container = autocomplete.closest('.autocomplete-container');
-        container.classList.add('loading');
-        setTimeout(function() {
-            if (autocomplete.closest('.node').classList.contains('saving')) {
-                const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'));
-                if (!autocomplete.value) {
-                    autocompleteClearAndHide(autocompleteContainer);
-                    return
-                }
-                const autocompleteRejex = new RegExp("^" + autocomplete.value, "i");
-                let verified = false;
-                let fragment = document.createDocumentFragment();
-                for (let i = 0; i < db.length; i++) {
-                    if (autocompleteRejex.test(db[i])) {
-                        verified = true;
-                        const element = document.createElement("p");
-                        element.innerText = db[i];
-                        element.setAttribute("onclick", "const autocomplete = document.querySelector('[data-target=\"" + autocomplete.getAttribute('data-target') + "\"]'); const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'));    autocomplete.value = this.innerText; autocompleteContainer.innerHTML = '';  autocompleteContainer.style.display = 'none';");
-                        fragment.appendChild(element);
+        if (!acl) {
+            acl = true;
+            const container = autocomplete.closest('.autocomplete-container');
+            container.classList.add('loading');
+            setTimeout(function () {
+                if (autocomplete.closest('.node').classList.contains('saving')) {
+                    const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'));
+                    if (!autocomplete.value) {
+                        container.classList.remove('loading');
+                        acl = false;
+                        autocompleteClearAndHide(autocompleteContainer);
+                        return
                     }
+                    var xhr = new XMLHttpRequest();
+                    dd('Loading scenario...');
+                    xhr.onreadystatechange = function () {
+                        container.classList.remove('loading');
+                        acl = false;
+                        if (this.readyState != 4) return
+                        if (this.status == 200) {
+                            const autocompleteRejex = new RegExp("^" + autocomplete.value, "i");
+                            let verified = false;
+                            let fragment = document.createDocumentFragment();
+                            const db = JSON.parse(this.responseText).data.map(item => item.designation);
+                            for (let i = 0; i < db.length; i++) {
+                                if (autocompleteRejex.test(db[i])) {
+                                    verified = true;
+                                    const element = document.createElement("p");
+                                    element.innerText = db[i];
+                                    element.setAttribute("onclick", "const autocomplete = document.querySelector('[data-target=\"" + autocomplete.getAttribute('data-target') + "\"]'); const autocompleteContainer = document.querySelector(autocomplete.getAttribute('data-target'));    autocomplete.value = this.innerText; autocompleteContainer.innerHTML = '';  autocompleteContainer.style.display = 'none';");
+                                    fragment.appendChild(element);
+                                }
+                            }
+                            if (verified == true) {
+                                autocompleteContainer.innerHTML = "";
+                                autocompleteContainer.style.display = "block";
+                                autocompleteContainer.appendChild(fragment);
+                                return
+                            }
+                            autocompleteClearAndHide(autocompleteContainer);
+                        } else if (this.status == 500) {
+                            toast(toastColors.danger, dictionnary.messages.server.internalError);
+                        } else {
+                            toast(toastColors.danger, dictionnary.messages.server.notResponding);
+                        }
+                    };
+                    xhr.open('GET', c.path + '/workflowmakr/' + autocomplete.getAttribute('data-target-model') + '?q=' + autocomplete.value, true);
+                    xhr.setRequestHeader('accept', 'application/json');
+                    if (c.request_headers) {
+                        Object.keys(c.request_headers).forEach(function (key) {
+                            xhr.setRequestHeader(key, c.request_headers[key]);
+                        });
+                    }
+                    xhr.send();
                 }
-                if (verified == true) {
-                    autocompleteContainer.innerHTML = "";
-                    autocompleteContainer.style.display = "block";
-                    autocompleteContainer.appendChild(fragment);
-                    return
-                }
-                popupClearAndHide();
-            }
-        }, 300);
+            }, 300);
+        }
     }
 
     /**
@@ -821,13 +921,13 @@
             <label for="transition-action-' + transition.id + '">' + dictionnary.transitions.updateForm.action + '</label>\
             <div class="autocomplete-container">\
                 <div class="loader"><span></span></div>\
-                <input class="autocomplete" data-target="#transition-action-autocomplete-' + transition.id + '" id="transition-action-' + transition.id + '" value="' + transition.action.designation + '" />\
+                <input class="autocomplete" data-target-model="actions" data-target="#transition-action-autocomplete-' + transition.id + '" id="transition-action-' + transition.id + '" value="' + transition.action.designation + '" />\
                 <div class="autocomplete-result" id="transition-action-autocomplete-' + transition.id + '"></div>\
             </div>\
             <label for="transition-new-status-' + transition.id + '">' + dictionnary.transitions.updateForm.newStatus + '</label>\
             <div class="autocomplete-container">\
                 <div class="loader"><span></span></div>\
-                <input class="autocomplete" data-target="#transition-new-status-autocomplete-' + transition.id + '" id="transition-new-status-' + transition.id + '" value="' + transition.new_status.designation + '" />\
+                <input class="autocomplete" data-target-model="statuses" data-target="#transition-new-status-autocomplete-' + transition.id + '" id="transition-new-status-' + transition.id + '" value="' + transition.new_status.designation + '" />\
                 <div class="autocomplete-result" id="transition-new-status-autocomplete-' + transition.id + '"></div>\
             </div>\
             <div>\

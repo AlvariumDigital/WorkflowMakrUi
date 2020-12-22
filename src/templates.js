@@ -10,6 +10,10 @@ export const loader =
 export const deletingLoader =
   '<div id="deleting-transition-loader"><div class="loader"><span></span></div></div>'
 
+// Saving a transition loader
+export const savingLoader =
+'<div id="saving-transition-loader"><div class="loader"><span></span></div></div>'
+
 // Base 64 add icon
 export const addIcon =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB9ElEQVQ4jaWSO2hTYRzFz3dThz6GEiyIaIgSb4IUoUOpGEI6pU2Mdqxg3SwU8bFYx+CgiyBiFmnRQeGGZmhpBRMfZLBDljwoWAht77WpEEQlUVDz7j0OljxKykU84/nO9+N//t8H/KdER/fYmBl9pnHowg4AkLiBn5U3yMXyRkAJdt/M2NXA73BklRlthxlth+HIKsen7/6CwzsNQDrwcv/I5PJc+DV1XSdJJpNJJhIJkqSu65xbiLL/7ORiZ4jdNxN88ZKtCoVCVBSlzXv8fIV7k+yNDAA214B7ZOjh9Sm/UUXcuHIB7uGhR5BHDzcBh/q8U35XjxCdd9oqIQQu+129MPV4AaALAKCbTp22WZBOpxGPxxvhVCoFkigUCg3P6XTCcfI4oEtyEwCKWr2OowNmyLLcCOdyOQBo88xmM75//gGAogkQVNcy23APX4TVam2E8/k8SMLj8bTVWH6/Bkhis7mDWj3ybClWqlRrhjsoV6p4uviuiNputAnQ3n79sPHxTiCoGAICQQXrW9nbUKPf9p9JXWcmVm7dn2exVCZJappGVVVJksVSmTfvzdM0OLGElo+0/90kOPzX5BOWB5d857oHbRYAwLr6CQuReGkzm51FJvIEgH4Q4K+so0fQ3XseFDYAAHe3UK2+wnbsi2HHf9UfUvbrs4JlrH0AAAAASUVORK5CYII='
