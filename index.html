@@ -14,19 +14,53 @@
     <script src="dist/index.umd.js"></script>
     <script>
         workflowmakr.init({
-            // REST API path
+            // REST API path (required)
             path: 'http://localhost:8000',
+            // HTML element that will contain the workflow makr UI (required)
+            selector: '#workflow-makr-canvas',
+            // Scenario id to get (required)
+            scenario_id: 1,
             // Enable debug
             debug: false,
             // Toast time out
             toast_time_out: 9000,
-            // HTML element that will contain the workflow makr UI
-            selector: '#workflow-makr-canvas',
-            // Scenario id to get
-            scenario_id: 1,
             // Request headers
             request_headers: {
                 Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiYzExZTYzNGY2NDk0NTBjOTVlYjA4Yjg1MDgwNjJjODIzYWM1YjUzZmMxMzFhYjYyY2Y5OGEwN2RhMGZlMzM3NGNhNTMyNWYzYWQ4MWQzOTAiLCJpYXQiOjE2MDg1NjU0MjAsIm5iZiI6MTYwODU2NTQyMCwiZXhwIjoxNjQwMTAxNDIwLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.O3XBJQ-FFf6FQaZgodLhzA5dvAQ9BYDtFTn6thMmvwvY1t9CTaKeX8HSwMc0MhdcU3eCGxZLBDmcEhuokj5sCY-nbm18vT7Ffcs5X7nsuH2yDETq5wALRQq245UNN3BGmAqftUdWEN4sVQx08BPRJuvwE0Fjq-qNoLmrovUMXAgjDqDueLQ57G9MR4D2LWURoWkgurGV9RLuF7wxEF5XmilJ3a1G--UJigJLGg2WTGI4pgHVLaArrLViGhCTzCMeIvCQbKRWCD5sj2rRKsYRUIal0S9eDimlPqa5HQq4yJ4nfAapRIqoUxWsfBN4nw2DK_kqoza57fCs_m_loruTYWfYV5UflUeRXt1IfUJQFdpStQUaUqMZF8y59GuR1hgQgjSc9ccdj9A_To-F2ZWQdb6YoVdYR6lqZU319gN31KXCM-Dm62-UcHnHKH5cQZHwsEtwFimk8M5d8qojE0G7IOBzB4zXSBhUZcdxZAyp92m9-NjHEvr6x7HLuIh1XzNgVDoYvSeyox7djP1ZvpsCVHV4YcTZ8V2pikeFiTwqslF0jhsI7we0VmRJHBMl-GMsvmppG3wh0h7eWUFbY3HQ8CR9BG9vl_5bFtsS7OZ4ZIsm3RYgUKhQO2Tp0tz3XoXZL6yQPj7hSWH1J8l2pSsEHoAlrusEIOvdd9_JscKQ1iM"
+            },
+            // i18n
+            i18n: {
+                transitions: {
+                    add: "Ajouter transition",
+                    edit: "Modifier transition",
+                    delete: "Supprimer transition",
+                    deleteConfirmation: {
+                        title: "Êtes-vous sûr ?",
+                        deleteBtn: "Oui !",
+                        cancelBtn: "Non"
+                    },
+                    saveForm: {
+                        action: "Action",
+                        newStatus: "Nouveau statut",
+                        saveBtn: "Sauvegarder",
+                        cancelBtn: "Annuler"
+                    }
+                },
+                messages: {
+                    server: {
+                        notResponding: "Erreur! Le serveur ne répond pas.",
+                        internalError: "Erreur! Le serveur a rencontré une erreur interne."
+                    },
+                    scenario: {
+                        updated: "Le scénario est mis à jour avec succès"
+                    },
+                    transitions: {
+                        notFound: "Erreur! Scénario introuvable.",
+                        delete: {
+                            alreadyUsed: "La transition ou / et un ou plusieurs de ses enfants sont déjà utilisés"
+                        }
+                    }
+                }
             }
         });
     </script>

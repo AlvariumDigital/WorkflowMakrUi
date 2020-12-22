@@ -286,8 +286,7 @@ body {
                 display: none;
             }
 
-            &.saving,
-            &.to-create {
+            &.saving {
                 background-color: lighten($blue, 55%);
 
                 .status,

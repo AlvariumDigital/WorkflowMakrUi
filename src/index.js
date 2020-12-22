@@ -37,7 +37,7 @@ let c = {}
 let acl = false
 
 // String dictionnary
-const dictionnary = {
+let dictionnary = {
     transitions: {
         add: "Add transition",
         edit: "Edit transition",
@@ -65,7 +65,7 @@ const dictionnary = {
         transitions: {
             notFound: "Error! Scenario not found.",
             delete: {
-                alreadyUsed: "The transition or/and one or more of it's children are already used"
+                alreadyUsed: "The transition or/and one or more of its children are already used"
             }
         }
     }
@@ -142,6 +142,9 @@ function attachEventListeners() {
         // Adding a transition
         if (target.classList.contains('add-btn')) {
             createEventListener(target)
+        }
+        if (target.getAttribute('data-create-transition')) {
+            confirmCreateTransition(target)
         }
         if (target.getAttribute('data-cancel-create-transition')) {
             cancelCreateTransition()
@@ -247,12 +250,7 @@ function reCalculateContainerWidth() {
  */
 function deleteEventListener(element) {
     const transitionId = +element.getAttribute("data-transition-id")
-    const toDeleteElements = document.querySelector('.node.to-delete')
-    if (toDeleteElements)
-        toDeleteElements.classList.remove('to-delete')
-    const savingElements = document.querySelector('.node.saving')
-    if (savingElements)
-        savingElements.classList.remove('saving')
+    cancelCreateTransition()
     document.querySelector('.node[data-transition="' + transitionId + '"]').classList.add('to-delete')
 }
 
@@ -269,6 +267,7 @@ function cancelDeleteTransition(element) {
  * @param element The element clicked
  */
 function createEventListener(element) {
+    cancelCreateTransition()
     const transitionId = element.getAttribute('data-transition-id')
     const transition = transitionId ? findTransition(s.transitions, element.getAttribute('data-transition-id')) : null
     const node = document.querySelector('li[data-transition="' + transitionId + '"]')
@@ -279,7 +278,7 @@ function createEventListener(element) {
     }
     let newNode = ''
     newNode += '<li class="to-create">'
-    newNode += '<div class="node to-create">'
+    newNode += '<div class="node saving">'
     newNode +=
         '<form class="save-form">\
             <label for="transition-action-to-create">' + dictionnary.transitions.saveForm.action + '</label>\
@@ -306,7 +305,69 @@ function createEventListener(element) {
 }
 
 /**
- * 
+ * Event listener for the event "click" on confirm create a transition
+ * @param element The element clicked
+ */
+function confirmCreateTransition(element) {
+    document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', savingLoader)
+    var xhr = new XMLHttpRequest()
+    dd('Creating transition...')
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return
+        if (this.status == 200) {
+            loadScenario()
+            toast(toastColors.success, dictionnary.messages.scenario.updated)
+        }
+        if (this.status == 404) {
+            console.error('Failed creating transition...')
+            console.error("Error", this.status, this.statusText)
+        }
+        if (this.status == 422) {
+            console.error('Failed creating transition...')
+            console.error("Error", this.status, this.statusText)
+            const body = JSON.parse(this.responseText).messages
+            let messages = "<p>"
+            if (body.new_status) {
+                body.new_status.forEach(item => messages += item + "<br />")
+            }
+            if (body.action) {
+                body.action.forEach(item => messages += item + "<br />")
+            }
+            if (body.old_status) {
+                body.old_status.forEach(item => messages += item + "<br />")
+            }
+            if (body.predecessor_id) {
+                body.predecessor_id.forEach(item => messages += item + "<br />")
+            }
+            if (body.scenario_id) {
+                body.scenario_id.forEach(item => messages += item + "<br />")
+            }
+            messages += "</p>"
+            toast(toastColors.warning, messages)
+            document.querySelector('#saving-transition-loader').remove()
+        }
+    }
+    xhr.open('POST', c.path + '/workflowmakr/transitions', true)
+    xhr.setRequestHeader('accept', 'application/json')
+    if (c.request_headers) {
+        Object.keys(c.request_headers).forEach(function (key) {
+            xhr.setRequestHeader(key, c.request_headers[key])
+        })
+    }
+    const actionSelector = 'li.to-create .node.saving .save-form input#transition-action-to-create'
+    const newStatusSelector = 'li.to-create .node.saving .save-form input#transition-new-status-to-create'
+    const transitionId = element.getAttribute('data-create-transition')
+    const transition = transitionId ? findTransition(s.transitions, transitionId) : null
+    xhr.send(JSON.stringify({
+        action: document.querySelector(actionSelector).value,
+        old_status: transition ? transition.new_status.designation : null,
+        new_status: document.querySelector(newStatusSelector).value,
+        predecessor_id: transition ? transition.id : null,
+        scenario_id: s.id
+    }))
+}
+
+/**
  * Event listener for the event "click" on cancel create a transition
  */
 function cancelCreateTransition() {
@@ -318,6 +379,13 @@ function cancelCreateTransition() {
     if (elements) {
         elements.remove()
     }
+    elements = document.querySelector('.node.to-delete')
+    if (elements)
+        elements.classList.remove('to-delete')
+    elements = document.querySelector('.node.saving')
+    if (elements)
+        elements.classList.remove('saving')
+    reCalculateContainerWidth()
 }
 
 /**
@@ -326,13 +394,7 @@ function cancelCreateTransition() {
  */
 function editEventListener(element) {
     const transitionId = +element.getAttribute("data-transition-id")
-    const elements = document.querySelector('.node.saving')
-    const toDeleteElements = document.querySelector('.node.to-delete')
-    if (toDeleteElements)
-        toDeleteElements.classList.remove('to-delete')
-    const savingElements = document.querySelector('.node.saving')
-    if (savingElements)
-        savingElements.classList.remove('saving')
+    cancelCreateTransition()
     document.querySelector('.node[data-transition="' + transitionId + '"]').classList.add('saving')
 }
 
@@ -361,11 +423,11 @@ function confirmEditTransition(element) {
             toast(toastColors.success, dictionnary.messages.scenario.updated)
         }
         if (this.status == 404) {
-            console.error('Failed deleting transition...')
+            console.error('Failed updating transition...')
             console.error("Error", this.status, this.statusText)
         }
         if (this.status == 422) {
-            console.error('Failed deleting transition...')
+            console.error('Failed updating transition...')
             console.error("Error", this.status, this.statusText)
             const body = JSON.parse(this.responseText).messages
             let messages = "<p>"
@@ -374,6 +436,12 @@ function confirmEditTransition(element) {
             }
             if (body.action) {
                 body.action.forEach(item => messages += item + "<br />")
+            }
+            if (body.old_status) {
+                body.old_status.forEach(item => messages += item + "<br />")
+            }
+            if (body.predecessor_id) {
+                body.predecessor_id.forEach(item => messages += item + "<br />")
             }
             messages += "</p>"
             toast(toastColors.warning, messages)
