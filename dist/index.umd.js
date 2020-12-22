@@ -839,7 +839,7 @@
                         return
                     }
                     var xhr = new XMLHttpRequest();
-                    dd('Loading scenario...');
+                    dd('Loading autocomplete data...');
                     xhr.onreadystatechange = function () {
                         container.classList.remove('loading');
                         acl = false;
