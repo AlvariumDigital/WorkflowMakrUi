@@ -1,5 +1,6 @@
 // Styles
 import './styles.scss'
+import 'toastify-js/src/toastify.css'
 
 // Templating
 import {
@@ -8,10 +9,23 @@ import {
     addIcon,
     deleteIcon,
     editIcon,
-    deletingLoader,
-    snackbar,
-    parseHtml
+    deletingLoader
 } from './templates'
+
+// Librairies
+import Toastify from 'toastify-js'
+
+// toast colors
+const toastColors = {
+    primary: '#0d6efd',
+    secondary: '#6c757d',
+    success: '#198754',
+    danger: '#dc3545',
+    warning: '#ffc107',
+    light: '#f8f9fa',
+    info: '#0dcaf0',
+    dark: '#212529'
+}
 
 // The scenario objects
 let s = {}
@@ -31,7 +45,12 @@ const dictionnary = {
         }
     },
     messages: {
+        server: {
+            notResponding: "Error! The server is not responding.",
+            internalError: "Error! The server encountered an internal error."
+        },
         transitions: {
+            notFound: "Error! Scenario not found.",
             delete: {
                 alreadyUsed: "The transition or/and one or more of it's children are already used"
             }
@@ -83,10 +102,36 @@ function loadScenario() {
                 showScenario(parseTransitions(s.transitions))
                 reCalculateContainerWidth()
             }, 500)
-        }
-        if (this.status == 404) {
-            console.error('Failed loading scenario...')
-            console.error("Error", this.status, this.statusText)
+        } else if (this.status == 404) {
+            Toastify({
+                text: dictionnary.messages.transitions.notFound,
+                duration: c.toast_time_out,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: toastColors.danger,
+                stopOnFocus: true
+            }).showToast();
+        } else if (this.status == 500) {
+            Toastify({
+                text: dictionnary.messages.server.internalError,
+                duration: c.toast_time_out,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: toastColors.danger,
+                stopOnFocus: true
+            }).showToast();
+        } else {
+            Toastify({
+                text: dictionnary.messages.server.notResponding,
+                duration: c.toast_time_out,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: toastColors.danger,
+                stopOnFocus: true
+            }).showToast();
         }
     }
     xhr.open('GET', 'http://localhost:8000/workflowmakr/scenarios/' + c.scenario_id, true)
@@ -223,11 +268,16 @@ function confirmDeleteTransition(element) {
         if (this.status == 422) {
             console.error('Failed deleting transition...')
             console.error("Error", this.status, this.statusText)
-            document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', parseHtml(snackbar, {
-                msg: dictionnary.messages.transitions.delete.alreadyUsed
-            }))
+            Toastify({
+                text: dictionnary.messages.transitions.delete.alreadyUsed,
+                duration: c.toast_time_out,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: toastColors.warning,
+                stopOnFocus: true
+            }).showToast();
             document.querySelector('#deleting-transition-loader').remove()
-            showSnackbar()
         }
     }
     xhr.open('DELETE', 'http://localhost:8000/workflowmakr/transitions/' + element.getAttribute('data-delete-transition'), true)
@@ -238,17 +288,6 @@ function confirmDeleteTransition(element) {
         })
     }
     xhr.send()
-}
-
-/**
- * Show the snackbar message
- */
-function showSnackbar() {
-    const snackbar = document.getElementById("snackbar")
-    snackbar.classList.add('show')
-    setTimeout(function () {
-        document.querySelector('#snackbar').remove()
-    }, 3000)
 }
 
 /**
@@ -333,6 +372,11 @@ function parseConfig(config) {
         Object.keys(config.i18n).forEach(function (key) {
             dictionnary[key] = config.i18n[key]
         })
+    }
+    if (config.toast_time_out) {
+        c.toast_time_out = config.toast_time_out
+    } else {
+        c.toast_time_out = 9000
     }
 }
 
