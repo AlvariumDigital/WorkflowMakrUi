@@ -241,7 +241,7 @@ function reCalculateContainerWidth() {
             }
         })
     }
-    document.querySelector('#workflow-makr-chart-container').style.minWidth = max * (200 * 1.8) + 'px'
+    document.querySelector('#workflow-makr-chart-container').style.minWidth = (max == 0 ? '100%': max * (200 * 1.8) + 'px')
 }
 
 /**

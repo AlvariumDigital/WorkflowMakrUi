@@ -20,6 +20,10 @@ $blue: #22659c;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+
+    a {
+        text-decoration: none;
+    }
 }
 
 // Org chart
@@ -491,7 +495,7 @@ body {
         margin: auto;
         width: 6px;
         height: 6px;
-        background: #FFF;
+        background: transparent;
         border-radius: 50%;
         -webkit-animation: loader-2 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
         animation: loader-2 1.5s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
@@ -637,7 +641,7 @@ body {
             &:after {
                 width: 4px;
                 height: 4px;
-                background: lighten($blue, 35%);
+                background: transparent;
             }
         }
     }
