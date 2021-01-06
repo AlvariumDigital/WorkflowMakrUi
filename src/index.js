@@ -85,7 +85,7 @@ export function init(config) {
 
     // Initialize workflow makr ui container
     document.querySelector(mainSelector).innerHTML = container
-    document.querySelector('#workflow-makr-chart-container').innerHTML = loader
+    document.querySelector(mainSelector + ' #workflow-makr-chart-container').innerHTML = loader
     dd('Initializing the workflow makr ui...')
 
     // Load scenario data
@@ -137,7 +137,7 @@ function loadScenario() {
  * Attach different events listeners
  */
 function attachEventListeners() {
-    document.addEventListener('click', function (e) {
+    document.querySelector(mainSelector).addEventListener('click', function (e) {
         const target = e.target
         // Adding a transition
         if (target.classList.contains('add-btn')) {
@@ -171,7 +171,7 @@ function attachEventListeners() {
         }
     })
     // Autocomplete listeners
-    document.addEventListener('keyup', function (e) {
+    document.querySelector(mainSelector).addEventListener('keyup', function (e) {
         const target = e.target
         if (target.classList.contains('autocomplete')) {
             autocompleteListener(target)
@@ -226,7 +226,7 @@ function showScenario(transitions) {
     html += '</ul>'
     html += '</div>'
     html += '</div>'
-    document.querySelector('#workflow-makr-chart-container').innerHTML = html
+    document.querySelector(mainSelector + ' #workflow-makr-chart-container').innerHTML = html
 }
 
 /**
@@ -241,7 +241,7 @@ function reCalculateContainerWidth() {
             }
         })
     }
-    document.querySelector('#workflow-makr-chart-container').style.minWidth = (max == 0 ? '100%': max * (200 * 1.8) + 'px')
+    document.querySelector(mainSelector + ' #workflow-makr-chart-container').style.minWidth = (max == 0 ? '100%': max * (200 * 1.8) + 'px')
 }
 
 /**
@@ -309,7 +309,7 @@ function createEventListener(element) {
  * @param element The element clicked
  */
 function confirmCreateTransition(element) {
-    document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', savingLoader)
+    document.querySelector(mainSelector + ' #workflow-makr-chart-container').insertAdjacentHTML('beforeend', savingLoader)
     var xhr = new XMLHttpRequest()
     dd('Creating transition...')
     xhr.onreadystatechange = function () {
@@ -413,7 +413,7 @@ function cancelEditTransition(element) {
  * @param element The element clicked
  */
 function confirmEditTransition(element) {
-    document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', savingLoader)
+    document.querySelector(mainSelector + ' #workflow-makr-chart-container').insertAdjacentHTML('beforeend', savingLoader)
     var xhr = new XMLHttpRequest()
     dd('Updating transition...')
     xhr.onreadystatechange = function () {
@@ -490,7 +490,7 @@ function findTransition(transitions, id) {
  * @param element The element clicked
  */
 function confirmDeleteTransition(element) {
-    document.querySelector('#workflow-makr-chart-container').insertAdjacentHTML('beforeend', deletingLoader)
+    document.querySelector(mainSelector + ' #workflow-makr-chart-container').insertAdjacentHTML('beforeend', deletingLoader)
     var xhr = new XMLHttpRequest()
     dd('Deleting transition...')
     xhr.onreadystatechange = function () {
