@@ -104,7 +104,6 @@ export function init(config) {
  * @returns 
  */
  function preDefineColorValues(picker, colors) {
-    console.log(picker, colors);
     if (picker.hasColorPallete) {
         return;
     }
