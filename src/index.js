@@ -15,6 +15,7 @@ import {
 
 // Librairies
 import Toastify from 'toastify-js'
+import CP from '@taufik-nurrohman/color-picker'
 
 // toast colors
 const toastColors = {
@@ -51,6 +52,7 @@ let dictionnary = {
             action: "Action",
             newStatus: "New status",
             saveBtn: "Save",
+            color: "Color",
             cancelBtn: "Cancel"
         }
     },
@@ -96,6 +98,82 @@ export function init(config) {
 }
 
 /**
+ * Predefine color picker colors list
+ * @param {*} picker 
+ * @param {*} colors 
+ * @returns 
+ */
+ function preDefineColorValues(picker, colors) {
+    console.log(picker, colors);
+    if (picker.hasColorPallete) {
+        return;
+    }
+    picker.hasColorPallete = true;
+    let pane = document.createElement('span'),
+        c;
+    for (let i = 0, j = colors.length; i < j; ++i) {
+        c = document.createElement('span');
+        c.title = '#' + colors[i];
+        c.style.backgroundColor = '#' + colors[i];
+        c.addEventListener('click', function(e) {
+            picker.set.apply(picker, CP.HEX(this.title));
+            e.stopPropagation();
+        });
+        pane.appendChild(c);
+    }
+    pane.className = 'color-pickers';
+    picker.self.appendChild(pane);
+}
+
+/**
+ * Initialize color picker inputs
+ * @param string source The element selector
+ */
+function initColorPickers(source) {
+    const element = document.querySelector(source)
+    const picker = new CP(element)
+    if (picker) {
+        resetColorPickerValue(source)
+        picker.on('change', function(r, g, b, a) {
+            this.source.value = this.color(r, g, b, a)
+            element.parentNode.querySelector('label .color-chosen').style.backgroundColor = this.color(r, g, b, a)
+        })
+        // Predefine color picker colors
+        preDefineColorValues(picker, [
+            'e8ecfb',
+            'cecece',
+            '824d99',
+            '4e78c4',
+            '57a2ac',
+            '7eb875',
+            'd0b541',
+            'e67f33',
+            'ce2220',
+            '521a13'
+        ]);
+    }
+}
+
+/**
+ * Reset color picker input value to default
+ * @param string source The element selector
+ */
+function resetColorPickerValue(source) {
+    const picker = CP.instances[source.replace('#', '')]
+    if (picker) {
+        const element = document.querySelector(source)
+        if (element.getAttribute('data-color-picker-value')) {
+            const rgba = CP.HEX(element.getAttribute('data-color-picker-value'))
+            setTimeout(() => {
+                picker.set(rgba[0], rgba[1], rgba[2], rgba[3])
+            }, 1);
+        } else {
+            picker.set(0, 0, 0, 0)
+        }
+    }
+}
+
+/**
  * Load the scenario data and show it
  */
 function loadScenario() {
@@ -113,6 +191,10 @@ function loadScenario() {
             setTimeout(() => {
                 dd('Printing scenario...')
                 showScenario(parseTransitions(s.transitions))
+                const colorPickers = document.querySelectorAll('[data-color-picker-value]')
+                for (let i = 0; i < colorPickers.length; ++i) {
+                    initColorPickers('#' + colorPickers[i].getAttribute('id'))
+                  }
                 reCalculateContainerWidth()
             }, 500)
         } else if (this.status == 404) {
@@ -195,6 +277,7 @@ function parseTransitions(transitions, index = 0) {
             old_status: transition.old_status,
             new_status: transition.new_status,
             action: transition.action,
+            color: transition.color,
             predecessor: transition.predecessor_id,
             transitions: parseTransitions(transition.children, index)
         })
@@ -293,6 +376,10 @@ function createEventListener(element) {
                 <input class="autocomplete" data-target-model="statuses" data-target="#transition-new-status-autocomplete-to-create" id="transition-new-status-to-create" value="" />\
                 <div class="autocomplete-result" id="transition-new-status-autocomplete-to-create"></div>\
             </div>\
+            <div class="color-picker-container">\
+                <label for="transition-color-to-create">' + dictionnary.transitions.saveForm.color + ' <span class="color-chosen"></span></label>\
+                <input id="transition-color-to-create" value="" />\
+            </div>\
             <div>\
                 <a data-create-transition="' + (transition ? transition.id : null) + '">' + dictionnary.transitions.saveForm.saveBtn + '</a>\
                 <a data-cancel-create-transition="true">' + dictionnary.transitions.saveForm.cancelBtn + '</a>\
@@ -302,6 +389,7 @@ function createEventListener(element) {
     newNode += '</li>'
     nodeChildren.insertAdjacentHTML('afterbegin', newNode)
     reCalculateContainerWidth()
+    initColorPickers('#transition-color-to-create')
 }
 
 /**
@@ -356,12 +444,14 @@ function confirmCreateTransition(element) {
     }
     const actionSelector = 'li.to-create .node.saving .save-form input#transition-action-to-create'
     const newStatusSelector = 'li.to-create .node.saving .save-form input#transition-new-status-to-create'
+    const colorSelector = 'li.to-create .node.saving .save-form input#transition-color-to-create'
     const transitionId = element.getAttribute('data-create-transition')
     const transition = transitionId ? findTransition(s.transitions, transitionId) : null
     xhr.send(JSON.stringify({
         action: document.querySelector(actionSelector).value,
         old_status: transition ? transition.new_status.designation : null,
         new_status: document.querySelector(newStatusSelector).value,
+        color: document.querySelector(colorSelector).value,
         predecessor_id: transition ? transition.id : null,
         scenario_id: s.id
     }))
@@ -405,7 +495,9 @@ function editEventListener(element) {
 function cancelEditTransition(element) {
     document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-update-transition') + '"]').classList.remove('saving')
     document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-update-transition') + '"] form.save-form').reset()
-    document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-update-transition') + '"] .autocomplete-container').classList.remove('loading')
+    document.querySelector('.node[data-transition="' + element.getAttribute('data-cancel-update-transition') + '"] .autocomplete-container').
+    classList.remove('loading')
+    resetColorPickerValue('#transition-color-' + element.getAttribute('data-cancel-update-transition'))
 }
 
 /**
@@ -457,11 +549,13 @@ function confirmEditTransition(element) {
     }
     const actionSelector = '.node[data-transition="' + element.getAttribute('data-update-transition') + '"] .save-form input#transition-action-' + element.getAttribute('data-update-transition')
     const newStatusSelector = '.node[data-transition="' + element.getAttribute('data-update-transition') + '"] .save-form input#transition-new-status-' + element.getAttribute('data-update-transition')
+    const colorSelector = '.node[data-transition="' + element.getAttribute('data-update-transition') + '"] .save-form input#transition-color-' + element.getAttribute('data-update-transition')
     const transition = findTransition(s.transitions, +element.getAttribute('data-update-transition'))
     xhr.send(JSON.stringify({
         action: document.querySelector(actionSelector).value,
         old_status: (transition.old_status) ? transition.old_status.designation : null,
         new_status: document.querySelector(newStatusSelector).value,
+        color: document.querySelector(colorSelector).value,
         predecessor_id: transition.predecessor_id
     }))
 }
@@ -629,6 +723,10 @@ function showNode(transition) {
                 <div class="loader"><span></span></div>\
                 <input class="autocomplete" data-target-model="statuses" data-target="#transition-new-status-autocomplete-' + transition.id + '" id="transition-new-status-' + transition.id + '" value="' + transition.new_status.designation + '" />\
                 <div class="autocomplete-result" id="transition-new-status-autocomplete-' + transition.id + '"></div>\
+            </div>\
+            <div class="color-picker-container">\
+                <label for="transition-color-' + transition.id + '">' + dictionnary.transitions.saveForm.color + ' <span class="color-chosen"></span></label>\
+                <input id="transition-color-' + transition.id + '" value="" data-color-picker-value="' + transition.color + '" />\
             </div>\
             <div>\
                 <a data-update-transition="' + transition.id + '">' + dictionnary.transitions.saveForm.saveBtn + '</a>\

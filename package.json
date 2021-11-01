@@ -27,6 +27,8 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
+    "@taufik-nurrohman/color-picker": "^2.3.2",
+    "sass": "^1.43.4",
     "toastify-js": "^1.9.3"
   }
 }
