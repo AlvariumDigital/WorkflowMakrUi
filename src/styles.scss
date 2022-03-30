@@ -317,14 +317,6 @@ body {
 
                 &:hover {
 
-                    +ul li::after,
-                    +ul li::before,
-                    +ul::before,
-                    +ul ul::before {
-                        border-width: 2px;
-                        border-color: #94a0b4;
-                    }
-
                     +ul li:only-child::before {
                         right: calc(50% - 2px);
                     }
@@ -383,7 +375,7 @@ body {
                 right: calc(50% - 45px);
                 width: 100%;
                 text-align: center;
-                background: #efefef;
+                background: transparent;
                 padding: 0;
                 z-index: 2;
             }
