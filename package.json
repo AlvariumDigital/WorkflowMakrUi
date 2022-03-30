@@ -1,6 +1,6 @@
 {
   "name": "workflow-makr-ui",
-  "version": "v1.0",
+  "version": "1.0",
   "description": "The UI integration of WorkflowMakr package, see https://github.com/AlvariumDigital/WorkflowMakr for details.",
   "main": "index.js",
   "scripts": {
