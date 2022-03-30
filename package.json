@@ -26,7 +26,7 @@
     "url": "https://github.com/AlvariumDigital/WorkflowMakrUi"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/alvariumdigital"
+    "registry": "https://npm.pkg.github.com/"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.3",
