@@ -1,6 +1,6 @@
 {
-  "name": "workflow-makr-ui",
-  "version": "1.0",
+  "name": "@alvariumdigital/workflow-maker-ui",
+  "version": "1.0.0",
   "description": "The UI integration of WorkflowMakr package, see https://github.com/AlvariumDigital/WorkflowMakr for details.",
   "main": "index.js",
   "scripts": {
@@ -16,8 +16,18 @@
     "ui"
   ],
   "type": "module",
-  "author": "heloufir",
-  "license": "ISC",
+  "author": {
+    "name": "heloufir",
+    "email": "eloufirhatim@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlvariumDigital/WorkflowMakrUi"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/alvariumdigital"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.3",
     "@rollup/plugin-node-resolve": "^13.1.3",
