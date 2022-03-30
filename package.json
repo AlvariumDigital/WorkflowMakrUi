@@ -1,6 +1,6 @@
 {
   "name": "workflow-makr-ui",
-  "version": "1.0.0",
+  "version": "v1.0",
   "description": "The UI integration of WorkflowMakr package, see https://github.com/AlvariumDigital/WorkflowMakr for details.",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "ui"
   ],
   "type": "module",
-  "author": "Alvarium Digital",
+  "author": "heloufir",
   "license": "ISC",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.3",
@@ -27,8 +27,8 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "@taufik-nurrohman/color-picker": "^2.3.2",
-    "sass": "^1.43.4",
-    "toastify-js": "^1.9.3"
+    "@taufik-nurrohman/color-picker": "^2.4.0",
+    "sass": "^1.49.9",
+    "toastify-js": "^1.11.2"
   }
 }
